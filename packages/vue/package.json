@@ -1,0 +1,55 @@
+{
+  "name": "@nava-icons/vue",
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "description": "Vue components for Nava Icons",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./*": {
+      "types": "./dist/icons/*.d.ts",
+      "import": "./dist/icons/*.mjs",
+      "require": "./dist/icons/*.cjs"
+    },
+    "./Icon": {
+      "types": "./dist/Icon.d.ts",
+      "import": "./dist/Icon.mjs",
+      "require": "./dist/Icon.cjs"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.mjs",
+      "require": "./dist/types.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "lint": "tsc --noEmit"
+  },
+
+  "peerDependencies": {
+    "vue": ">=3"
+  },
+  "devDependencies": {
+    "vue": "^3.5.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.7.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nava-icons/nava-icons",
+    "directory": "packages/vue"
+  }
+}

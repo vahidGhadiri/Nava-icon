@@ -1,0 +1,21 @@
+services:
+  verify:
+    container_name: nava-icons-verify
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: verifier
+    environment:
+      - NODE_ENV=production
+
+  publish:
+    container_name: nava-icons-publish
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: publisher
+    environment:
+      - NODE_ENV=production
+      - NPM_TOKEN=${NPM_TOKEN}
+    profiles:
+      - publish

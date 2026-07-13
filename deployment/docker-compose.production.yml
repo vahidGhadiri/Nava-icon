@@ -1,0 +1,13 @@
+services:
+  verify:
+    image: ghcr.io/${GITHUB_REPOSITORY}:main
+    environment:
+      - NODE_ENV=production
+
+  publish:
+    image: ghcr.io/${GITHUB_REPOSITORY}:main
+    environment:
+      - NODE_ENV=production
+      - NPM_TOKEN=${NPM_TOKEN}
+    profiles:
+      - publish

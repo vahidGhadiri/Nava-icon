@@ -1,0 +1,43 @@
+{
+  "name": "nava-icons",
+  "private": true,
+  "type": "module",
+  "description": "Professional open-source icon library — SVG source of truth, framework-agnostic",
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "generate": "tsx scripts/generate.ts",
+    "build": "turbo run build",
+    "build:packages": "turbo run build --filter='./packages/*'",
+    "build:docs": "turbo run build --filter='@nava-icons/docs'",
+    "dev": "turbo run dev",
+    "dev:docs": "pnpm --filter @nava-icons/docs dev",
+    "validate": "turbo run validate",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "lint:fix": "prettier --write \"**/*.{ts,tsx,vue,json,md}\"",
+    "clean": "turbo run clean",
+    "typecheck": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,vue,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,vue,json,md}\"",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "publish:ci": "changeset publish --no-private",
+    "release": "pnpm generate && pnpm build && changeset publish --no-private",
+    "release:snapshot": "pnpm generate && pnpm build && changeset publish --tag snapshot --no-private",
+    "docker:build": "docker build -t nava-icons:local -f docker/Dockerfile .",
+    "docker:verify": "docker run --rm nava-icons:local pnpm lint",
+    "docker:shell": "docker run --rm -it nava-icons:local sh",
+    "docker:compose:verify": "docker compose -f deployment/docker-compose.local.yml run --rm verify",
+    "docker:compose:publish": "docker compose -f deployment/docker-compose.local.yml --profile publish run --rm publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.0",
+    "prettier": "^3.4.0",
+    "tsx": "^4.0.0",
+    "turbo": "^2.4.0",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [develop, staging, main]
+    paths:
+      - "assets/**"
+      - "packages/**"
+      - "scripts/**"
+      - "turbo.json"
+      - "tsconfig.base.json"
+      - "pnpm-workspace.yaml"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    branches: [develop, staging, main]
+    paths:
+      - "assets/**"
+      - "packages/**"
+      - "scripts/**"
+      - "turbo.json"
+      - "tsconfig.base.json"
+      - "pnpm-workspace.yaml"
+      - "pnpm-lock.yaml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate icons
+        run: pnpm generate
+
+      - name: Build
+        run: pnpm build
+
+      - name: Lint (type check)
+        run: pnpm lint
+
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: |
+            packages/*/dist/
+          retention-days: 1
+
+  docker-verify:
+    name: Docker Verify
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t nava-icons:verify -f docker/Dockerfile .
+
+      - name: Run build inside container
+        run: docker run --rm nava-icons:verify pnpm lint
