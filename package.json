@@ -30,8 +30,7 @@
     "docker:build": "docker build -t nava-icons:local -f docker/Dockerfile .",
     "docker:verify": "docker run --rm nava-icons:local pnpm lint",
     "docker:shell": "docker run --rm -it nava-icons:local sh",
-    "docker:compose:verify": "docker compose -f deployment/docker-compose.local.yml run --rm verify",
-    "docker:compose:publish": "docker compose -f deployment/docker-compose.local.yml --profile publish run --rm publish"
+    "docker:compose:verify": "docker compose -f deployment/docker-compose.local.yml run --rm verify"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
