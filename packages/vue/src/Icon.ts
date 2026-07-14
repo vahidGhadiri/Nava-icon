@@ -31,7 +31,7 @@ export default defineComponent({
     },
     strokeWidth: {
       type: [Number, String] as PropType<number | string>,
-      default: 2,
+      default: 1,
     },
     mode: {
       type: String as PropType<"regular" | "filled">,
