@@ -24,7 +24,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,vue,json,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "publish:ci": "changeset publish --no-private",
+    "publish:ci": "changeset publish",
     "release": "pnpm generate && pnpm build && changeset publish --no-private",
     "release:snapshot": "pnpm generate && pnpm build && changeset publish --tag snapshot --no-private",
     "docker:build": "docker build -t nava-icon:local -f docker/Dockerfile .",
