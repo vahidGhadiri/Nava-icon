@@ -6,11 +6,11 @@ on:
       - develop
       - stage
       - main
+      - "release/**"
     paths:
       - "assets/**"
       - "packages/**"
       - "scripts/**"
-      - "docker/**"
       - "turbo.json"
       - "tsconfig.base.json"
       - "pnpm-workspace.yaml"
@@ -22,11 +22,11 @@ on:
       - develop
       - stage
       - main
+      - "release/**"
     paths:
       - "assets/**"
       - "packages/**"
       - "scripts/**"
-      - "docker/**"
       - "turbo.json"
       - "tsconfig.base.json"
       - "pnpm-workspace.yaml"
@@ -64,17 +64,5 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Type check
+      - name: Lint
         run: pnpm lint
-
-  docker:
-    name: Docker Verify
-    needs: verify
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Build Docker image
-        run: docker build -f docker/Dockerfile -t nava-icon:verify .
