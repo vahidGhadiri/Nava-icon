@@ -20,7 +20,7 @@ export function Header() {
   useEffect(() => setMounted(true), [])
 
   return (
-    <header className="sticky top-0 z-50 glass border-b border-white/20 dark:border-white/5">
+    <header className="sticky top-0 z-50 bg-white/60 dark:bg-surface-950/60 backdrop-blur-xl backdrop-saturate-150 border-b border-black/[0.06] dark:border-white/[0.06]">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2.5 group">
           <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg shadow-primary-500/20 group-hover:shadow-primary-500/30 transition-shadow">
