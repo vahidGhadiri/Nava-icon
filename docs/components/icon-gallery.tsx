@@ -215,7 +215,7 @@ export function IconGallery() {
         {/* Detail Panel */}
         {selectedIconData && (
           <div className="hidden sm:block w-80 shrink-0">
-            <div className="sticky top-20 glass-card rounded-2xl p-5 overflow-hidden">
+            <div className="sticky top-20 glass-card rounded-2xl p-5 max-h-[calc(100vh-6rem)] overflow-y-auto">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="glass rounded-xl p-3">
@@ -265,7 +265,7 @@ export function IconGallery() {
               {/* Color Picker */}
               <div className="mb-4">
                 <p className="text-[10px] font-medium text-surface-400 mb-2 uppercase tracking-wider">Color</p>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 overflow-x-auto pb-1">
                   {[
                     { label: 'Default', value: 'currentColor' },
                     { label: 'Slate', value: '#64748b' },
