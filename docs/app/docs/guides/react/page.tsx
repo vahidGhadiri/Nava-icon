@@ -6,16 +6,13 @@ export default function ReactGuide() {
   return (
     <article className="prose dark:prose-invert max-w-none">
       <h1>React</h1>
-
       <h2>Installation</h2>
-      <pre className="not-prose rounded-xl border border-surface-200 dark:border-surface-800 bg-surface-100 dark:bg-surface-900 p-4 text-sm overflow-x-auto">
+      <pre className="not-prose code-block">
         <code>npm install @nava-icons/react</code>
       </pre>
-
       <h2>Static Import</h2>
-      <pre className="not-prose rounded-xl border border-surface-200 dark:border-surface-800 bg-surface-100 dark:bg-surface-900 p-4 text-sm overflow-x-auto">
+      <pre className="not-prose code-block">
         <code>{`import { Home, Search, Add } from '@nava-icons/react'
-
 function App() {
   return (
     <div>
@@ -26,11 +23,9 @@ function App() {
   )
 }`}</code>
       </pre>
-
       <h2>Dynamic Import</h2>
-      <pre className="not-prose rounded-xl border border-surface-200 dark:border-surface-800 bg-surface-100 dark:bg-surface-900 p-4 text-sm overflow-x-auto">
+      <pre className="not-prose code-block">
         <code>{`import { Icon } from '@nava-icons/react'
-
 function App() {
   return (
     <div>
@@ -40,10 +35,9 @@ function App() {
   )
 }`}</code>
       </pre>
-
       <h2>Tree Shaking</h2>
       <p>Static imports are fully tree-shakeable. Only imported icons are included in your bundle.</p>
-      <pre className="not-prose rounded-xl border border-surface-200 dark:border-surface-800 bg-surface-100 dark:bg-surface-900 p-4 text-sm overflow-x-auto">
+      <pre className="not-prose code-block">
         <code>{`// ✅ ~1KB - only Home
 import { Home } from '@nava-icons/react'
 

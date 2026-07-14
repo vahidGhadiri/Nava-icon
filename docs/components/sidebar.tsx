@@ -12,11 +12,11 @@ export function Sidebar({ sections }: { sections: Section[] }) {
   const pathname = usePathname()
 
   return (
-    <aside className="hidden lg:block w-56 shrink-0">
+    <aside className="hidden lg:block w-52 shrink-0">
       <nav className="sticky top-20 space-y-6">
         {sections.map(section => (
           <div key={section.title}>
-            <h4 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-500">
+            <h4 className="mb-1.5 px-3 text-[11px] font-semibold uppercase tracking-widest text-surface-400 dark:text-surface-500">
               {section.title}
             </h4>
             <ul className="space-y-0.5">
@@ -26,10 +26,10 @@ export function Sidebar({ sections }: { sections: Section[] }) {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className={`block rounded-lg px-3 py-1.5 text-sm transition-colors ${
+                      className={`block rounded-lg px-3 py-1.5 text-[13px] transition-all duration-200 ${
                         active
-                          ? 'bg-primary-500/10 font-medium text-primary-600 dark:text-primary-400'
-                          : 'text-surface-600 hover:text-surface-900 dark:text-surface-400 dark:hover:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-800/50'
+                          ? 'bg-primary-500/10 font-medium text-primary-600 dark:text-primary-400 shadow-sm shadow-primary-500/5'
+                          : 'text-surface-500 hover:text-surface-900 dark:text-surface-400 dark:hover:text-white hover:bg-black/[0.03] dark:hover:bg-white/[0.04]'
                       }`}
                     >
                       {item.label}

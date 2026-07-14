@@ -2,26 +2,60 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Installation' }
 
+const ReactIcon = (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="2.5" />
+    <ellipse cx="12" cy="12" rx="10" ry="4" />
+    <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)" />
+    <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)" />
+  </svg>
+)
+
+const VueIcon = (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M2 3h3.5L12 14.5 18.5 3H22L12 21 2 3z" />
+    <path d="M6.5 3L12 14.5 17.5 3h-3L12 6.8 9.5 3H6.5z" fill="white" opacity="0.4" />
+  </svg>
+)
+
+const AngularIcon = (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M14.07 2.75L20.1 15.74 20.73 5.83Z" />
+    <path d="M15.62 16.4L8.36 16.4 7.43 18.65 11.99 21.25 16.55 18.65Z" />
+    <path d="M9.6 13.48L14.38 13.48 11.99 7.68Z" fill="var(--color-surface-50, white)" />
+    <path d="M9.92 2.75L3.25 5.83 3.88 15.74Z" />
+  </svg>
+)
+
+const WebComponentsIcon = (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2L3 7v10l9 5 9-5V7l-9-5z" />
+    <path d="M12 12L3 7m9 5l9-5m-9 0v10" />
+  </svg>
+)
+
 const frameworks = [
-  { name: 'React', cmd: 'npm install @nava-icons/react', color: 'border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-950/50' },
-  { name: 'Vue', cmd: 'npm install @nava-icons/vue', color: 'border-green-200 dark:border-green-800 bg-green-50/50 dark:bg-green-950/50' },
-  { name: 'Angular', cmd: 'npm install @nava-icons/angular', color: 'border-red-200 dark:border-red-800 bg-red-50/50 dark:bg-red-950/50' },
-  { name: 'Web Components', cmd: 'npm install @nava-icons/web-components', color: 'border-purple-200 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-950/50' },
+  { name: 'React', cmd: 'npm install @nava-icons/react', icon: ReactIcon, color: 'text-blue-500 dark:text-blue-400' },
+  { name: 'Vue', cmd: 'npm install @nava-icons/vue', icon: VueIcon, color: 'text-emerald-500 dark:text-emerald-400' },
+  { name: 'Angular', cmd: 'npm install @nava-icons/angular', icon: AngularIcon, color: 'text-red-500 dark:text-red-400' },
+  { name: 'Web Components', cmd: 'npm install @nava-icons/web-components', icon: WebComponentsIcon, color: 'text-violet-500 dark:text-violet-400' },
 ]
 
 export default function Installation() {
   return (
     <article className="prose dark:prose-invert max-w-none">
       <h1>Installation</h1>
-      <p className="text-surface-600 dark:text-surface-400">
+      <p className="text-surface-500 dark:text-surface-400 text-[15px] leading-relaxed">
         Choose your framework and install the package.
       </p>
-
-      <div className="not-prose space-y-3 my-6">
+      <div className="not-prose space-y-2.5 my-6">
         {frameworks.map(f => (
-          <div key={f.name} className={`rounded-xl border p-4 ${f.color}`}>
-            <p className="font-semibold text-sm mb-2">{f.name}</p>
-            <code className="text-xs font-mono text-surface-600 dark:text-surface-400">{f.cmd}</code>
+          <div key={f.name} className="glass-card rounded-xl p-4 flex items-center gap-3">
+            <span className={f.color}>{f.icon}</span>
+            <div>
+              <p className="font-semibold text-[13px] tracking-tight">{f.name}</p>
+              <code className="text-[12px] font-mono text-surface-500 dark:text-surface-400">{f.cmd}</code>
+            </div>
           </div>
         ))}
       </div>

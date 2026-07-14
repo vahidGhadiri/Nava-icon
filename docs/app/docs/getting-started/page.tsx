@@ -6,10 +6,9 @@ export default function GettingStarted() {
   return (
     <article className="prose dark:prose-invert max-w-none">
       <h1>Getting Started</h1>
-      <p className="text-surface-600 dark:text-surface-400">
+      <p className="text-surface-500 dark:text-surface-400 text-[15px] leading-relaxed">
         Nava Icons provides SVG icons as framework-agnostic components with full TypeScript support.
       </p>
-
       <h2>Features</h2>
       <ul>
         <li><strong>SVG Source of Truth</strong> — Icons generated from SVG files</li>
@@ -19,9 +18,8 @@ export default function GettingStarted() {
         <li><strong>TypeScript</strong> — Full type safety with autocomplete</li>
         <li><strong>ESM + CJS</strong> — Works everywhere</li>
       </ul>
-
       <h2>Architecture</h2>
-      <pre className="not-prose rounded-xl border border-surface-200 dark:border-surface-800 bg-surface-100 dark:bg-surface-900 p-4 text-sm overflow-x-auto">
+      <pre className="not-prose code-block">
         <code>{`assets/svg/*.svg          → Source of truth
     ↓ scripts/src/index.ts     → Code generator
     ↓ packages/*/src/icons/    → Generated components
