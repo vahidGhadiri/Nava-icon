@@ -40,7 +40,6 @@ RUN pnpm generate
 
 RUN pnpm build
 
-
 # -----------------------
 # Verify
 # -----------------------
