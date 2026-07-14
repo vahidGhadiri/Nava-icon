@@ -265,7 +265,7 @@ export function IconGallery() {
               {/* Color Picker */}
               <div className="mb-4">
                 <p className="text-[10px] font-medium text-surface-400 mb-2 uppercase tracking-wider">Color</p>
-                <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                <div className="flex items-center gap-2 overflow-x-auto py-4 px-2">
                   {[
                     { label: 'Default', value: 'currentColor' },
                     { label: 'Slate', value: '#64748b' },
