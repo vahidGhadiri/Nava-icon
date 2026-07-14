@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useCallback } from 'react'
-import { icons, categories, getCodeSnippet, type Framework } from '@/lib/icons'
+import { icons, categories, getCodeSnippet, type Framework, type IconMode } from '@/lib/icons'
 
 const frameworkLabels: Record<Framework, string> = {
   react: 'React',
@@ -10,15 +10,16 @@ const frameworkLabels: Record<Framework, string> = {
   'web-components': 'Web Components'
 }
 
-function IconPreview({ svg }: { svg: string }) {
+function IconPreview({ svg, mode }: { svg: string; mode: IconMode }) {
+  const isFilled = mode === 'filled'
   return (
     <svg
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
+      fill={isFilled ? 'currentColor' : 'none'}
+      stroke={isFilled ? 'none' : 'currentColor'}
+      strokeWidth="1"
       strokeLinecap="round"
       strokeLinejoin="round"
       className="text-surface-600 dark:text-surface-300"
@@ -32,6 +33,7 @@ export function IconGallery() {
   const [activeCategory, setActiveCategory] = useState<string>('all')
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null)
   const [framework, setFramework] = useState<Framework>('react')
+  const [previewMode, setPreviewMode] = useState<IconMode>('regular')
   const [copied, setCopied] = useState(false)
 
   const filtered = useMemo(() => {
@@ -49,14 +51,18 @@ export function IconGallery() {
   , [selectedIcon])
 
   const codeSnippet = useMemo(() =>
-    selectedIcon ? getCodeSnippet(selectedIcon, framework) : ''
-  , [selectedIcon, framework])
+    selectedIcon ? getCodeSnippet(selectedIcon, framework, previewMode) : ''
+  , [selectedIcon, framework, previewMode])
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(codeSnippet)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }, [codeSnippet])
+
+  const getPreviewSvg = useCallback((icon: { regularSvg: string; filledSvg: string }, mode: IconMode) => {
+    return mode === 'filled' && icon.filledSvg ? icon.filledSvg : icon.regularSvg
+  }, [])
 
   return (
     <div>
@@ -109,14 +115,21 @@ export function IconGallery() {
             {filtered.map(icon => (
               <button
                 key={icon.name}
-                onClick={() => setSelectedIcon(selectedIcon === icon.name ? null : icon.name)}
+                onClick={() => {
+                  if (selectedIcon === icon.name) {
+                    setSelectedIcon(null)
+                  } else {
+                    setSelectedIcon(icon.name)
+                    setPreviewMode('regular')
+                  }
+                }}
                 className={`icon-card glass-card group flex flex-col items-center gap-1.5 rounded-xl p-3 transition-all duration-200 ${
                   selectedIcon === icon.name
                     ? '!border-primary-400/50 dark:!border-primary-500/50 !bg-primary-500/8 dark:!bg-primary-500/10 shadow-sm shadow-primary-500/10'
                     : ''
                 }`}
               >
-                <IconPreview svg={icon.svg} />
+                <IconPreview svg={getPreviewSvg(icon, previewMode)} mode={previewMode} />
                 <span className="text-[9px] font-medium text-surface-400 dark:text-surface-500 text-center leading-tight truncate w-full">
                   {icon.name}
                 </span>
@@ -148,13 +161,13 @@ export function IconGallery() {
                       width="28"
                       height="28"
                       viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.75"
+                      fill={previewMode === 'filled' ? 'currentColor' : 'none'}
+                      stroke={previewMode === 'filled' ? 'none' : 'currentColor'}
+                      strokeWidth="1"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       className="text-primary-500"
-                      dangerouslySetInnerHTML={{ __html: selectedIconData.svg }}
+                      dangerouslySetInnerHTML={{ __html: getPreviewSvg(selectedIconData, previewMode) }}
                     />
                   </div>
                   <div>
@@ -171,6 +184,23 @@ export function IconGallery() {
                     <line x1="6" y1="6" x2="18" y2="18" />
                   </svg>
                 </button>
+              </div>
+
+              {/* Mode Selector */}
+              <div className="flex gap-0.5 mb-4 p-0.5 rounded-xl glass">
+                {(['regular', 'filled'] as IconMode[]).map(mode => (
+                  <button
+                    key={mode}
+                    onClick={() => setPreviewMode(mode)}
+                    className={`flex-1 rounded-lg px-2 py-1.5 text-[11px] font-medium transition-all duration-200 ${
+                      previewMode === mode
+                        ? 'bg-white dark:bg-surface-700 text-surface-900 dark:text-white shadow-sm'
+                        : 'text-surface-500 hover:text-surface-700 dark:hover:text-surface-300'
+                    }`}
+                  >
+                    {mode === 'regular' ? 'Regular' : 'Filled'}
+                  </button>
+                ))}
               </div>
 
               {/* Framework Selector */}
