@@ -1,82 +1,8 @@
 import Link from 'next/link'
-import { readdirSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
 import { InstallSection } from '@/components/install-section'
-import type { Icon } from '@/lib/icons'
-
-function stripHardcodedFill(inner: string): string {
-  return inner
-    .replace(/fill="black"/g, '')
-    .replace(/fill="none"/g, '')
-    .replace(/fill="white"/g, '')
-    .replace(/fill="#000000"/g, '')
-    .replace(/fill="#000"/g, '')
-    .replace(/\s{2,}/g, ' ')
-    .trim()
-}
-
-function discoverIcons(): Icon[] {
-  const assetsDir = join(process.cwd(), '..', 'assets', 'icons')
-  const regularDir = join(assetsDir, 'regular')
-  const filledDir = join(assetsDir, 'filled')
-
-  let regularFiles: string[] = []
-  let filledFiles: string[] = []
-
-  try { regularFiles = readdirSync(regularDir).filter(f => f.endsWith('.svg')) } catch {}
-  try { filledFiles = readdirSync(filledDir).filter(f => f.endsWith('.svg')) } catch {}
-
-  const iconMap = new Map<string, { regular: string | null; filled: string | null }>()
-
-  for (const file of regularFiles) {
-    const baseName = file.replace(/^bx-/, '').replace(/\.svg$/, '')
-    const existing = iconMap.get(baseName)
-    if (existing) existing.regular = join(regularDir, file)
-    else iconMap.set(baseName, { regular: join(regularDir, file), filled: null })
-  }
-
-  for (const file of filledFiles) {
-    const baseName = file.replace(/^bxs-/, '').replace(/\.svg$/, '')
-    const existing = iconMap.get(baseName)
-    if (existing) existing.filled = join(filledDir, file)
-    else iconMap.set(baseName, { regular: null, filled: join(filledDir, file) })
-  }
-
-  const icons: Icon[] = []
-
-  for (const [name, paths] of iconMap) {
-    let regularSvg = ''
-    let filledSvg = ''
-
-    if (paths.regular) {
-      const content = readFileSync(paths.regular, 'utf-8')
-      const match = content.match(/<svg[^>]*>([\s\S]*?)<\/svg>/)
-      regularSvg = match ? stripHardcodedFill(match[1].trim()) : ''
-    }
-
-    if (paths.filled) {
-      const content = readFileSync(paths.filled, 'utf-8')
-      const match = content.match(/<svg[^>]*>([\s\S]*?)<\/svg>/)
-      filledSvg = match ? stripHardcodedFill(match[1].trim()) : ''
-    }
-
-    const displayName = name.replace(/-/g, ' ')
-
-    icons.push({
-      name,
-      regularSvg,
-      filledSvg,
-      tags: [displayName],
-      categories: ['general'],
-    })
-  }
-
-  return icons
-}
+import { HomeIconGrid } from '@/components/home-icon-grid'
 
 export default function Home() {
-  const icons = discoverIcons()
-
   return (
     <div>
       {/* Hero */}
@@ -128,47 +54,7 @@ export default function Home() {
 
       <InstallSection />
 
-      {/* Icon Grid */}
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 py-20 sm:py-28">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-[-0.01em]">All Icons</h2>
-          <p className="mt-2 text-[14px] text-surface-500 dark:text-surface-400">
-            Click any icon to see usage code across all frameworks.
-          </p>
-        </div>
-        <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2.5">
-          {icons.map((icon) => (
-            <Link
-              key={icon.name}
-              href={`/docs/icons#${icon.name}`}
-              className="icon-card glass-card group flex flex-col items-center gap-2 rounded-xl p-4"
-            >
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="text-surface-600 dark:text-surface-300 group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors duration-200"
-                dangerouslySetInnerHTML={{ __html: icon.regularSvg }}
-              />
-              <span className="text-[9px] font-medium text-surface-400 dark:text-surface-500 text-center leading-tight truncate w-full">
-                {icon.name}
-              </span>
-            </Link>
-          ))}
-        </div>
-        <div className="mt-10 text-center">
-          <Link
-            href="/docs/icons"
-            className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 transition-colors duration-200"
-          >
-            View all {icons.length} icons
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
-      </section>
+      <HomeIconGrid />
     </div>
   )
 }

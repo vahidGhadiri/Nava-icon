@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { getCodeSnippet, type Framework, type IconMode, type Icon } from '@/lib/icons'
 
 const frameworkLabels: Record<Framework, string> = {
@@ -9,6 +9,8 @@ const frameworkLabels: Record<Framework, string> = {
   angular: 'Angular',
   'web-components': 'Web Components'
 }
+
+const PAGE_SIZE = 60
 
 function IconPreview({ svg }: { svg: string }) {
   return (
@@ -23,29 +25,68 @@ function IconPreview({ svg }: { svg: string }) {
   )
 }
 
-const allCategories = ['general']
-
-export function IconGallery({ icons }: { icons: Icon[] }) {
+export function IconGallery() {
+  const [allIcons, setAllIcons] = useState<Icon[]>([])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState<string>('all')
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null)
   const [framework, setFramework] = useState<Framework>('react')
   const [previewMode, setPreviewMode] = useState<IconMode>('regular')
   const [copied, setCopied] = useState(false)
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+  const sentinelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    fetch('/icons-manifest.json')
+      .then(r => r.json())
+      .then((data: Icon[]) => {
+        setAllIcons(data)
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
 
   const filtered = useMemo(() => {
-    return icons.filter(icon => {
+    return allIcons.filter(icon => {
       const matchesSearch = !search ||
         icon.name.toLowerCase().includes(search.toLowerCase()) ||
         icon.tags.some(tag => tag.toLowerCase().includes(search.toLowerCase()))
       const matchesCategory = activeCategory === 'all' || icon.categories.includes(activeCategory)
       return matchesSearch && matchesCategory
     })
+  }, [allIcons, search, activeCategory])
+
+  const visibleIcons = useMemo(() => filtered.slice(0, visibleCount), [filtered, visibleCount])
+  const hasMore = visibleCount < filtered.length
+
+  const categories = useMemo(() => {
+    const cats = new Set<string>()
+    allIcons.forEach(icon => icon.categories.forEach(c => cats.add(c)))
+    return Array.from(cats)
+  }, [allIcons])
+
+  useEffect(() => {
+    if (!sentinelRef.current || !hasMore) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount(prev => prev + PAGE_SIZE)
+        }
+      },
+      { rootMargin: '200px' }
+    )
+    observer.observe(sentinelRef.current)
+    return () => observer.disconnect()
+  }, [hasMore])
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE)
   }, [search, activeCategory])
 
   const selectedIconData = useMemo(() =>
-    selectedIcon ? icons.find(icon => icon.name === selectedIcon) : null
-  , [selectedIcon])
+    selectedIcon ? allIcons.find(icon => icon.name === selectedIcon) : null
+  , [selectedIcon, allIcons])
 
   const codeSnippet = useMemo(() =>
     selectedIcon ? getCodeSnippet(selectedIcon, framework, previewMode) : ''
@@ -60,6 +101,14 @@ export function IconGallery({ icons }: { icons: Icon[] }) {
   const getPreviewSvg = useCallback((icon: { regularSvg: string; filledSvg: string }, mode: IconMode) => {
     return mode === 'filled' && icon.filledSvg ? icon.filledSvg : icon.regularSvg
   }, [])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="text-[13px] text-surface-400">Loading icons...</div>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -90,7 +139,7 @@ export function IconGallery({ icons }: { icons: Icon[] }) {
 
       {/* Category Filters */}
       <div className="flex flex-wrap gap-1.5 mb-6">
-        {['all', ...allCategories].map(cat => (
+        {['all', ...categories].map(cat => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
@@ -109,7 +158,7 @@ export function IconGallery({ icons }: { icons: Icon[] }) {
         {/* Grid */}
         <div className="flex-1 min-w-0">
           <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-2">
-            {filtered.map(icon => (
+            {visibleIcons.map(icon => (
               <button
                 key={icon.name}
                 onClick={() => {
@@ -133,7 +182,11 @@ export function IconGallery({ icons }: { icons: Icon[] }) {
               </button>
             ))}
           </div>
-          {filtered.length === 0 && (
+
+          {/* Infinite scroll sentinel */}
+          {hasMore && <div ref={sentinelRef} className="h-4" />}
+
+          {filtered.length === 0 && !loading && (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className="rounded-2xl glass-card p-4 mb-4">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-surface-400">

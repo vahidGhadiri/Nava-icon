@@ -392,6 +392,28 @@ function generateWebComponentsIndex(icons: IconEntry[]): string {
 
 // ─── Main Generation ────────────────────────────────────────────────────────
 
+function generateDocsManifest(icons: IconEntry[]): string {
+  const entries = icons.map((icon) => {
+    const regularSvgContent = icon.regular ? readFileSync(icon.regular, "utf-8") : "";
+    const filledSvgContent = icon.filled ? readFileSync(icon.filled, "utf-8") : "";
+    const regularInnerMatch = regularSvgContent.match(/<svg[^>]*>([\s\S]*?)<\/svg>/);
+    const filledInnerMatch = filledSvgContent.match(/<svg[^>]*>([\s\S]*?)<\/svg>/);
+    const regularInner = regularInnerMatch ? stripHardcodedFill(regularInnerMatch[1].trim()) : "";
+    const filledInner = filledInnerMatch ? stripHardcodedFill(filledInnerMatch[1].trim()) : "";
+    const displayName = icon.name.replace(/-/g, " ");
+
+    return {
+      name: icon.name,
+      regularSvg: regularInner,
+      filledSvg: filledInner,
+      tags: [displayName],
+      categories: ["general"],
+    };
+  });
+
+  return JSON.stringify(entries);
+}
+
 function main() {
   const icons = discoverIcons();
 
@@ -427,6 +449,10 @@ function main() {
   writeFileSync(join(vueIconsDir, "index.ts"), generateVueIndex(icons));
   writeFileSync(join(angularIconsDir, "index.ts"), generateAngularIndex(icons));
   writeFileSync(join(wcIconsDir, "index.ts"), generateWebComponentsIndex(icons));
+
+  const docsPublicDir = join(ROOT, "docs", "public");
+  mkdirSync(docsPublicDir, { recursive: true });
+  writeFileSync(join(docsPublicDir, "icons-manifest.json"), generateDocsManifest(icons));
 
   console.log(`\nGenerated ${icons.length} icon components across 4 frameworks\n`);
 }
