@@ -10,18 +10,13 @@ const frameworkLabels: Record<Framework, string> = {
   'web-components': 'Web Components'
 }
 
-function IconPreview({ svg, mode }: { svg: string; mode: IconMode }) {
-  const isFilled = mode === 'filled'
+function IconPreview({ svg }: { svg: string }) {
   return (
     <svg
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      fill={isFilled ? 'currentColor' : 'none'}
-      stroke={isFilled ? 'none' : 'currentColor'}
-      strokeWidth="1"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      fill="currentColor"
       className="text-surface-600 dark:text-surface-300"
       dangerouslySetInnerHTML={{ __html: svg }}
     />
@@ -131,7 +126,7 @@ export function IconGallery({ icons }: { icons: Icon[] }) {
                     : ''
                 }`}
               >
-                <IconPreview svg={getPreviewSvg(icon, previewMode)} mode={previewMode} />
+                <IconPreview svg={getPreviewSvg(icon, previewMode)} />
                 <span className="text-[9px] font-medium text-surface-400 dark:text-surface-500 text-center leading-tight truncate w-full">
                   {icon.name}
                 </span>
@@ -163,11 +158,7 @@ export function IconGallery({ icons }: { icons: Icon[] }) {
                       width="28"
                       height="28"
                       viewBox="0 0 24 24"
-                      fill={previewMode === 'filled' ? 'currentColor' : 'none'}
-                      stroke={previewMode === 'filled' ? 'none' : 'currentColor'}
-                      strokeWidth="1"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                      fill="currentColor"
                       className="text-primary-500"
                       dangerouslySetInnerHTML={{ __html: getPreviewSvg(selectedIconData, previewMode) }}
                     />
