@@ -146,14 +146,20 @@ export function IconGallery() {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`rounded-lg px-3 py-1 text-[11px] font-medium transition-all duration-200 ${
+              className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-[11px] font-medium transition-all duration-200 ${
                 activeCategory === cat
                   ? 'bg-primary-500 text-white shadow-sm shadow-primary-500/25'
                   : 'glass-card text-surface-500 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white'
               }`}
             >
-              {cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}
-              <span className="ml-1 opacity-60">{count}</span>
+              <span>{cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
+              <span className={`inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full text-[9px] font-bold ${
+                activeCategory === cat
+                  ? 'bg-white/20 text-white'
+                  : 'bg-surface-200 dark:bg-white/10 text-surface-500 dark:text-surface-400'
+              }`}>
+                {count}
+              </span>
             </button>
           )
         })}
@@ -259,7 +265,7 @@ export function IconGallery() {
               {/* Color Picker */}
               <div className="mb-4">
                 <p className="text-[10px] font-medium text-surface-400 mb-2 uppercase tracking-wider">Color</p>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex items-center gap-2">
                   {[
                     { label: 'Default', value: 'currentColor' },
                     { label: 'Slate', value: '#64748b' },
@@ -277,20 +283,16 @@ export function IconGallery() {
                       key={color.value}
                       onClick={() => setPreviewColor(color.value)}
                       title={color.label}
-                      className={`group relative w-6 h-6 rounded-lg transition-all duration-200 ${
+                      className={`w-7 h-7 rounded-full transition-all duration-200 shrink-0 ${
                         previewColor === color.value
-                          ? 'ring-2 ring-primary-500 ring-offset-1 ring-offset-white dark:ring-offset-surface-800 scale-110'
-                          : 'hover:scale-105'
+                          ? 'ring-2 ring-primary-500 ring-offset-2 ring-offset-white dark:ring-offset-surface-800 scale-110'
+                          : 'hover:scale-110'
                       }`}
-                    >
-                      <div
-                        className="w-full h-full rounded-lg border border-black/10 dark:border-white/10"
-                        style={{ backgroundColor: color.value === 'currentColor' ? undefined : color.value }}
-                      />
-                      {color.value === 'currentColor' && (
-                        <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-surface-300 to-surface-500 dark:from-surface-500 dark:to-surface-700" />
-                      )}
-                    </button>
+                      style={{
+                        backgroundColor: color.value === 'currentColor' ? '#94a3b8' : color.value,
+                        backgroundImage: color.value === 'currentColor' ? 'linear-gradient(135deg, #94a3b8 0%, #475569 50%, #1e293b 100%)' : undefined,
+                      }}
+                    />
                   ))}
                 </div>
               </div>
