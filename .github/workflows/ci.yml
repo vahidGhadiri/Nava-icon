@@ -2,35 +2,46 @@ name: CI
 
 on:
   push:
-    branches: [develop, stage, main]
+    branches:
+      - develop
+      - stage
+      - main
     paths:
       - "assets/**"
       - "packages/**"
       - "scripts/**"
+      - "docker/**"
       - "turbo.json"
       - "tsconfig.base.json"
       - "pnpm-workspace.yaml"
       - "pnpm-lock.yaml"
       - ".github/workflows/ci.yml"
+
   pull_request:
-    branches: [develop, stage, main]
+    branches:
+      - develop
+      - stage
+      - main
     paths:
       - "assets/**"
       - "packages/**"
       - "scripts/**"
+      - "docker/**"
       - "turbo.json"
       - "tsconfig.base.json"
       - "pnpm-workspace.yaml"
       - "pnpm-lock.yaml"
+      - ".github/workflows/ci.yml"
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   verify:
     name: Verify
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -53,27 +64,17 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Lint (type check)
+      - name: Type check
         run: pnpm lint
 
-      - name: Upload dist artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: |
-            packages/*/dist/
-          retention-days: 1
-
-  docker-verify:
+  docker:
     name: Docker Verify
     needs: verify
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t nava-icon:verify -f docker/Dockerfile .
-
-      - name: Run build inside container
-        run: docker run --rm nava-icon:verify pnpm lint
+        run: docker build -f docker/Dockerfile -t nava-icon:verify .
