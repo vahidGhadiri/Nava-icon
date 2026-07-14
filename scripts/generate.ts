@@ -280,19 +280,19 @@ if (!customElements.get("${tagName}")) {
 // ─── Index File Generation ──────────────────────────────────────────────────
 
 function generateReactIndex(entries: ManifestEntry[]): string {
-  return entries.map((e) => `export { ${e.name} } from "./icons/${e.name}.js";`).join("\n") + "\n";
+  return entries.map((e) => `export { ${e.name} } from "./${e.name}.js";`).join("\n") + "\n";
 }
 
 function generateVueIndex(entries: ManifestEntry[]): string {
-  return entries.map((e) => `export { ${e.name} } from "./icons/${e.name}.js";`).join("\n") + "\n";
+  return entries.map((e) => `export { ${e.name} } from "./${e.name}.js";`).join("\n") + "\n";
 }
 
 function generateAngularIndex(entries: ManifestEntry[]): string {
-  return entries.map((e) => `export { ${e.name}Component } from "./icons/${e.name}.component.js";`).join("\n") + "\n";
+  return entries.map((e) => `export { ${e.name}Component } from "./${e.name}.component.js";`).join("\n") + "\n";
 }
 
 function generateWebComponentsIndex(entries: ManifestEntry[]): string {
-  return entries.map((e) => `import "./icons/${e.name}.js";`).join("\n") + "\n";
+  return entries.map((e) => `import "./${e.name}.js";`).join("\n") + "\n";
 }
 
 // ─── Package.json Export Generation ─────────────────────────────────────────
@@ -324,7 +324,7 @@ function updatePackageExports(
 function main() {
   const collections = discoverCollections();
 
-  console.log(`\n📦 Found ${collections.length} collections in assets/\n`);
+  console.log(`\nFound ${collections.length} collections in assets/\n`);
 
   let totalIcons = 0;
 
@@ -407,7 +407,7 @@ function main() {
     }
   }
 
-  console.log(`\n✅ Generated ${totalIcons} icon components across 4 frameworks\n`);
+  console.log(`\nGenerated ${totalIcons} icon components across 4 frameworks\n`);
 }
 
 main();
