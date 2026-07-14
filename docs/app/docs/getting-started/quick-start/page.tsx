@@ -19,14 +19,16 @@ function App() {
     <div>
       <Home />
       <Search size={24} color="gray" />
-      <Add size={32} color="blue" />
+      <Add size={32} color="#ff6600" />
     </div>
   )
 }`}</code>
       </pre>
       <h2>3. Customize</h2>
       <pre className="not-prose code-block">
-        <code>{`<Home size={32} color="blue" strokeWidth={2} className="my-icon" title="Home" />`}</code>
+        <code>{`<Home size={32} color="blue" strokeWidth={2} className="my-icon" title="Home" />
+<Home size={32} color="#ff6600" />
+<Home size={32} color="rgb(0, 150, 136)" />`}</code>
       </pre>
       <h2>4. Switch Mode</h2>
       <p>Use the <code>mode</code> prop to switch between regular (stroke) and filled (solid) variants.</p>

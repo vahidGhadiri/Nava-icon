@@ -62,14 +62,30 @@ function discoverIcons(): IconEntry[] {
 // ─── SVG Analysis ───────────────────────────────────────────────────────────
 
 function isStrokeBased(svgContent: string): boolean {
-  return svgContent.includes('fill="none"') && svgContent.includes("stroke=");
+  const pathSection = svgContent.match(/<svg[^>]*>([\s\S]*?)<\/svg>/);
+  const paths = pathSection ? pathSection[1] : svgContent;
+  const hasStrokeOnPath = /<path[^>]*stroke=/.test(paths);
+  const hasFillNoneOnPath = /<path[^>]*fill="none"/.test(paths);
+  return hasStrokeOnPath || hasFillNoneOnPath;
+}
+
+function stripHardcodedFill(inner: string): string {
+  return inner
+    .replace(/fill="black"/g, "")
+    .replace(/fill="none"/g, "")
+    .replace(/fill="white"/g, "")
+    .replace(/fill="#000000"/g, "")
+    .replace(/fill="#000"/g, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
 }
 
 function parseSvg(svgContent: string): SvgData {
   const viewBoxMatch = svgContent.match(/viewBox=["']([^"']+)["']/);
   const viewBox = viewBoxMatch ? viewBoxMatch[1] : "0 0 24 24";
   const innerMatch = svgContent.match(/<svg[^>]*>([\s\S]*?)<\/svg>/);
-  const inner = innerMatch ? innerMatch[1] : "";
+  const rawInner = innerMatch ? innerMatch[1] : "";
+  const inner = stripHardcodedFill(rawInner);
   return { viewBox, inner, strokeBased: isStrokeBased(svgContent) };
 }
 
@@ -122,6 +138,7 @@ export function ${componentName}({
   const isFilled = mode === "filled" && filledPaths;
   const paths = isFilled ? filledPaths : regularPaths;
   const strokeBased = isFilled ? ${isFilledStrokeBased} : ${isRegularStrokeBased};
+  const appliedColor = color || "currentColor";
 
   return (
     <svg
@@ -129,8 +146,8 @@ export function ${componentName}({
       viewBox="${viewBox}"
       width={size}
       height={size}
-      fill={strokeBased ? "none" : "currentColor"}
-      stroke={color || "currentColor"}
+      fill={strokeBased ? "none" : appliedColor}
+      stroke={strokeBased ? appliedColor : "none"}
       strokeWidth={strokeWidth || (strokeBased ? 2 : undefined)}
       strokeLinecap={strokeBased ? "round" : undefined}
       strokeLinejoin={strokeBased ? "round" : undefined}
@@ -183,6 +200,7 @@ export const ${componentName} = defineComponent({
       const isFilled = props.mode === "filled" && filledPaths;
       const paths = isFilled ? filledPaths : regularPaths;
       const strokeBased = isFilled ? ${isFilledStrokeBased} : ${isRegularStrokeBased};
+      const appliedColor = props.color || "currentColor";
 
       return h(
         "svg",
@@ -191,9 +209,9 @@ export const ${componentName} = defineComponent({
           viewBox: "${viewBox}",
           width: props.size,
           height: props.size,
-          fill: strokeBased ? "none" : "currentColor",
-          stroke: props.color || "currentColor",
-          strokeWidth: props.strokeWidth,
+          fill: strokeBased ? "none" : appliedColor,
+          stroke: strokeBased ? appliedColor : "none",
+          "stroke-width": props.strokeWidth,
           "stroke-linecap": strokeBased ? "round" : undefined,
           "stroke-linejoin": strokeBased ? "round" : undefined,
           class: props.className,
@@ -238,11 +256,11 @@ function generateAngularComponent(icon: IconEntry): string {
       viewBox="${viewBox}"
       [attr.width]="size"
       [attr.height]="size"
-      [attr.fill]="isFilled ? '${isFilledStrokeBased ? "none" : "currentColor"}' : '${isRegularStrokeBased ? "none" : "currentColor"}'"
-      [attr.stroke]="color || 'currentColor'"
-      [attr.stroke-width]="strokeWidth"
-      [attr.stroke-linecap]="isFilled ? '${isFilledStrokeBased ? "round" : ""}' : '${isRegularStrokeBased ? "round" : ""}'"
-      [attr.stroke-linejoin]="isFilled ? '${isFilledStrokeBased ? "round" : ""}' : '${isRegularStrokeBased ? "round" : ""}'"
+      [attr.fill]="isStrokeBased ? 'none' : color"
+      [attr.stroke]="isStrokeBased ? color : 'none'"
+      [attr.stroke-width]="isStrokeBased ? strokeWidth : undefined"
+      [attr.stroke-linecap]="isStrokeBased ? 'round' : undefined"
+      [attr.stroke-linejoin]="isStrokeBased ? 'round' : undefined"
     >
       <ng-container [ngSwitch]="mode">
         <g *ngSwitchCase="'filled'" [innerHTML]="'${filledInner}'"></g>
@@ -259,6 +277,10 @@ export class ${componentName}Component {
 
   get isFilled(): boolean {
     return this.mode === "filled";
+  }
+
+  get isStrokeBased(): boolean {
+    return this.isFilled ? ${isFilledStrokeBased} : ${isRegularStrokeBased};
   }
 }
 `;
@@ -318,9 +340,9 @@ function generateWebComponent(icon: IconEntry): string {
         viewBox="${viewBox}"
         width="\${size}"
         height="\${size}"
-        fill="\${strokeBased ? "none" : "currentColor"}"
-        stroke="\${color}"
-        stroke-width="\${strokeWidth}"
+        fill="\${strokeBased ? "none" : color}"
+        stroke="\${strokeBased ? color : "none"}"
+        stroke-width="\${strokeBased ? strokeWidth : ""}"
         \${strokeBased ? 'stroke-linecap="round"' : ""}
         \${strokeBased ? 'stroke-linejoin="round"' : ""}
       >

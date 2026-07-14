@@ -60,9 +60,9 @@ export abstract class NavaIconBase extends HTMLElement {
         width="${this.size}"
         height="${this.size}"
         viewBox="${this._config.viewBox}"
-        fill="${strokeBased ? "none" : "currentColor"}"
-        stroke="${this.color}"
-        stroke-width="${this.strokeWidth}"
+        fill="${strokeBased ? "none" : this.color}"
+        stroke="${strokeBased ? this.color : "none"}"
+        stroke-width="${strokeBased ? this.strokeWidth : ""}"
         ${strokeBased ? 'stroke-linecap="round"' : ""}
         ${strokeBased ? 'stroke-linejoin="round"' : ""}
         role="img"

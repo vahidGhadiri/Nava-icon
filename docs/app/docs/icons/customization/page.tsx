@@ -22,7 +22,7 @@ export default function Customization() {
           </thead>
           <tbody className="text-surface-500 dark:text-surface-400">
             <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">size</td><td className="py-2.5">number</td><td className="py-2.5">24</td><td className="py-2.5">Icon size in pixels</td></tr>
-            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">color</td><td className="py-2.5">string</td><td className="py-2.5">currentColor</td><td className="py-2.5">Icon color</td></tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">color</td><td className="py-2.5">string</td><td className="py-2.5">currentColor</td><td className="py-2.5">Any CSS color — hex, rgb, hsl, named color, etc.</td></tr>
             <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">strokeWidth</td><td className="py-2.5">number</td><td className="py-2.5">2</td><td className="py-2.5">SVG stroke width</td></tr>
             <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">mode</td><td className="py-2.5">"regular" | "filled"</td><td className="py-2.5">"regular"</td><td className="py-2.5">Icon variant: stroke outline or solid fill</td></tr>
             <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">className</td><td className="py-2.5">string</td><td className="py-2.5">—</td><td className="py-2.5">Additional CSS class</td></tr>
@@ -44,6 +44,9 @@ export default function Customization() {
       <pre className="not-prose code-block">
         <code>{`<Home />
 <Home size={32} color="blue" />
+<Home size={32} color="#ff6600" />
+<Home size={32} color="rgb(0, 150, 136)" />
+<Home size={32} color="hsl(210, 100%, 50%)" />
 <Home mode="filled" color="red" />
 <Home title="Go to homepage" />
 <Home className="hover:rotate-12 transition-transform" />`}</code>
