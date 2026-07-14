@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useCallback } from 'react'
-import { icons, categories, getCodeSnippet, type Framework, type IconMode } from '@/lib/icons'
+import { getCodeSnippet, type Framework, type IconMode, type Icon } from '@/lib/icons'
 
 const frameworkLabels: Record<Framework, string> = {
   react: 'React',
@@ -28,7 +28,9 @@ function IconPreview({ svg, mode }: { svg: string; mode: IconMode }) {
   )
 }
 
-export function IconGallery() {
+const allCategories = ['general']
+
+export function IconGallery({ icons }: { icons: Icon[] }) {
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState<string>('all')
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null)
@@ -93,7 +95,7 @@ export function IconGallery() {
 
       {/* Category Filters */}
       <div className="flex flex-wrap gap-1.5 mb-6">
-        {['all', ...categories].map(cat => (
+        {['all', ...allCategories].map(cat => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}

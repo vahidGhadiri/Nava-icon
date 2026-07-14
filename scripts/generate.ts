@@ -358,65 +358,6 @@ if (!customElements.get("${tagName}")) {
 `;
 }
 
-// ─── Docs Icons Data ────────────────────────────────────────────────────────
-
-function generateDocsIconsData(icons: IconEntry[]): string {
-  const entries = icons.map((icon) => {
-    const regularSvgContent = icon.regular ? readFileSync(icon.regular, "utf-8") : "";
-    const filledSvgContent = icon.filled ? readFileSync(icon.filled, "utf-8") : "";
-    const regularInnerMatch = regularSvgContent.match(/<svg[^>]*>([\s\S]*?)<\/svg>/);
-    const filledInnerMatch = filledSvgContent.match(/<svg[^>]*>([\s\S]*?)<\/svg>/);
-    const regularInner = regularInnerMatch ? stripHardcodedFill(regularInnerMatch[1].trim()) : "";
-    const filledInner = filledInnerMatch ? stripHardcodedFill(filledInnerMatch[1].trim()) : "";
-    const nameForDisplay = icon.name.replace(/-/g, " ");
-    const category = "general";
-
-    return `  {
-    name: "${icon.name}",
-    regularSvg: \`${escapeTemplateLiteral(regularInner)}\`,
-    filledSvg: \`${escapeTemplateLiteral(filledInner)}\`,
-    tags: ["${nameForDisplay}"],
-    categories: ["${category}"],
-  },`;
-  });
-
-  return `export type Framework = 'react' | 'vue' | 'angular' | 'web-components'
-export type IconMode = 'regular' | 'filled'
-
-export interface Icon {
-  name: string
-  regularSvg: string
-  filledSvg: string
-  tags: string[]
-  categories: string[]
-}
-
-export const categories: string[] = ['general']
-
-export const icons: Icon[] = [
-${entries.join("\n")}
-]
-
-export function getCodeSnippet(name: string, framework: Framework, mode: IconMode = 'regular'): string {
-  const pascal = name
-    .split(/[-_]+/)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join('')
-
-  switch (framework) {
-    case 'react':
-      return \`import { \${pascal}Icon } from '@nava-icons/react'\n\n<\${pascal}Icon size={24} color="currentColor"\${mode === 'filled' ? ' mode="filled"' : ''} />\`
-    case 'vue':
-      return \`<script setup>\nimport { \${pascal}Icon } from '@nava-icons/vue'\n</script>\n\n<\${pascal}Icon :size="24" color="currentColor"\${mode === 'filled' ? ' mode="filled"' : ''} />\`
-    case 'angular':
-      return \`// In your module:\nimport { \${pascal}IconComponent } from '@nava-icons/angular'\n\n// In your template:\n<icon-\${name} [size]="24" color="currentColor"\${mode === 'filled' ? ' mode="filled"' : ''}></icon-\${name}>\`
-    case 'web-components':
-      return \`<script type="module" src="@nava-icons/web-components"></script>\n\n<icon-\${name} size="24" color="currentColor"\${mode === 'filled' ? ' mode="filled"' : ''}></icon-\${name}>\`
-  }
-}
-`;
-}
-
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 function escapeTemplateLiteral(str: string): string {
@@ -486,10 +427,6 @@ function main() {
   writeFileSync(join(vueIconsDir, "index.ts"), generateVueIndex(icons));
   writeFileSync(join(angularIconsDir, "index.ts"), generateAngularIndex(icons));
   writeFileSync(join(wcIconsDir, "index.ts"), generateWebComponentsIndex(icons));
-
-  const docsLibDir = join(ROOT, "docs", "lib");
-  mkdirSync(docsLibDir, { recursive: true });
-  writeFileSync(join(docsLibDir, "icons.ts"), generateDocsIconsData(icons));
 
   console.log(`\nGenerated ${icons.length} icon components across 4 frameworks\n`);
 }
