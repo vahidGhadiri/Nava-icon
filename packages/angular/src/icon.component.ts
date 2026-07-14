@@ -28,7 +28,7 @@ export class IconComponent {
   @Input() name: IconName | string = "";
   @Input() size: number | string = 24;
   @Input() color: string = "currentColor";
-  @Input() strokeWidth: number | string = 1;
+  @Input() strokeWidth: number | string = 0.5;
   @Input() mode: "regular" | "filled" = "regular";
 
   get iconComponent(): any {

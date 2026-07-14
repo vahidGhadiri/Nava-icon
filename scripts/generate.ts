@@ -148,7 +148,7 @@ export function ${componentName}({
       height={size}
       fill={strokeBased ? "none" : appliedColor}
       stroke={strokeBased ? appliedColor : "none"}
-      strokeWidth={strokeWidth || (strokeBased ? 1 : undefined)}
+      strokeWidth={strokeWidth || (strokeBased ? 0.5 : undefined)}
       strokeLinecap={strokeBased ? "round" : undefined}
       strokeLinejoin={strokeBased ? "round" : undefined}
       className={className}
@@ -189,7 +189,7 @@ export const ${componentName} = defineComponent({
   props: {
     size: { type: [Number, String] as PropType<number | string>, default: 24 },
     color: { type: String, default: "currentColor" },
-    strokeWidth: { type: [Number, String] as PropType<number | string>, default: 1 },
+    strokeWidth: { type: [Number, String] as PropType<number | string>, default: 0.5 },
     className: { type: String },
     style: { type: Object as PropType<Record<string, string | number>> },
     title: { type: String },
@@ -272,7 +272,7 @@ function generateAngularComponent(icon: IconEntry): string {
 export class ${componentName}Component {
   @Input() size: number | string = 24;
   @Input() color: string = "currentColor";
-  @Input() strokeWidth: number | string = 1;
+  @Input() strokeWidth: number | string = 0.5;
   @Input() mode: "regular" | "filled" = "regular";
 
   get isFilled(): boolean {
@@ -325,7 +325,7 @@ function generateWebComponent(icon: IconEntry): string {
   render() {
     const size = this.getAttribute("size") || "24";
     const color = this.getAttribute("color") || "currentColor";
-    const strokeWidth = this.getAttribute("stroke-width") || "1";
+    const strokeWidth = this.getAttribute("stroke-width") || "0.5";
     const mode = this.getAttribute("mode") || "regular";
     const isFilled = mode === "filled";
 
