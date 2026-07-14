@@ -33,6 +33,7 @@ export function IconGallery() {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null)
   const [framework, setFramework] = useState<Framework>('react')
   const [previewMode, setPreviewMode] = useState<IconMode>('regular')
+  const [previewColor, setPreviewColor] = useState<string>('currentColor')
   const [copied, setCopied] = useState(false)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const sentinelRef = useRef<HTMLDivElement>(null)
@@ -89,8 +90,8 @@ export function IconGallery() {
   , [selectedIcon, allIcons])
 
   const codeSnippet = useMemo(() =>
-    selectedIcon ? getCodeSnippet(selectedIcon, framework, previewMode) : ''
-  , [selectedIcon, framework, previewMode])
+    selectedIcon ? getCodeSnippet(selectedIcon, framework, previewMode, previewColor) : ''
+  , [selectedIcon, framework, previewMode, previewColor])
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(codeSnippet)
@@ -171,6 +172,7 @@ export function IconGallery() {
                   } else {
                     setSelectedIcon(icon.name)
                     setPreviewMode('regular')
+                    setPreviewColor('currentColor')
                   }
                 }}
                 className={`icon-card glass-card group flex flex-col items-center gap-1.5 rounded-xl p-3 transition-all duration-200 ${
@@ -215,8 +217,9 @@ export function IconGallery() {
                       width="28"
                       height="28"
                       viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="text-primary-500"
+                      fill={previewColor === 'currentColor' ? 'currentColor' : previewColor}
+                      className={previewColor === 'currentColor' ? 'text-primary-500' : ''}
+                      style={previewColor !== 'currentColor' ? { color: previewColor } : undefined}
                       dangerouslySetInnerHTML={{ __html: getPreviewSvg(selectedIconData, previewMode) }}
                     />
                   </div>
@@ -251,6 +254,45 @@ export function IconGallery() {
                     {mode === 'regular' ? 'Regular' : 'Filled'}
                   </button>
                 ))}
+              </div>
+
+              {/* Color Picker */}
+              <div className="mb-4">
+                <p className="text-[10px] font-medium text-surface-400 mb-2 uppercase tracking-wider">Color</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    { label: 'Default', value: 'currentColor' },
+                    { label: 'Slate', value: '#64748b' },
+                    { label: 'Red', value: '#ef4444' },
+                    { label: 'Orange', value: '#f97316' },
+                    { label: 'Amber', value: '#f59e0b' },
+                    { label: 'Green', value: '#22c55e' },
+                    { label: 'Teal', value: '#14b8a6' },
+                    { label: 'Blue', value: '#3b82f6' },
+                    { label: 'Indigo', value: '#6366f1' },
+                    { label: 'Purple', value: '#a855f7' },
+                    { label: 'Pink', value: '#ec4899' },
+                  ].map(color => (
+                    <button
+                      key={color.value}
+                      onClick={() => setPreviewColor(color.value)}
+                      title={color.label}
+                      className={`group relative w-6 h-6 rounded-lg transition-all duration-200 ${
+                        previewColor === color.value
+                          ? 'ring-2 ring-primary-500 ring-offset-1 ring-offset-white dark:ring-offset-surface-800 scale-110'
+                          : 'hover:scale-105'
+                      }`}
+                    >
+                      <div
+                        className="w-full h-full rounded-lg border border-black/10 dark:border-white/10"
+                        style={{ backgroundColor: color.value === 'currentColor' ? undefined : color.value }}
+                      />
+                      {color.value === 'currentColor' && (
+                        <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-surface-300 to-surface-500 dark:from-surface-500 dark:to-surface-700" />
+                      )}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Framework Selector */}
