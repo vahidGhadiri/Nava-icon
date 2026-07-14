@@ -28,6 +28,12 @@ function App() {
       <pre className="not-prose code-block">
         <code>{`<Home size={32} color="blue" strokeWidth={2} className="my-icon" title="Home" />`}</code>
       </pre>
+      <h2>4. Switch Mode</h2>
+      <p>Use the <code>mode</code> prop to switch between regular (stroke) and filled (solid) variants.</p>
+      <pre className="not-prose code-block">
+        <code>{`<CheckCircle mode="regular" />  {/* stroke outline */}
+<CheckCircle mode="filled" />   {/* solid fill */}`}</code>
+      </pre>
       <h2>Props</h2>
       <div className="not-prose overflow-x-auto">
         <table className="w-full text-[13px] border-collapse">
@@ -42,6 +48,7 @@ function App() {
             <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">size</td><td className="py-2.5">number</td><td className="py-2.5">24</td></tr>
             <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">color</td><td className="py-2.5">string</td><td className="py-2.5">currentColor</td></tr>
             <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">strokeWidth</td><td className="py-2.5">number</td><td className="py-2.5">2</td></tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">mode</td><td className="py-2.5">"regular" | "filled"</td><td className="py-2.5">"regular"</td></tr>
             <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">className</td><td className="py-2.5">string</td><td className="py-2.5">—</td></tr>
             <tr><td className="py-2.5 font-mono text-[12px]">title</td><td className="py-2.5">string</td><td className="py-2.5">—</td></tr>
           </tbody>

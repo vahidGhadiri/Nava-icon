@@ -4,7 +4,10 @@ export interface IconBaseConfig {
   defaultStrokeWidth: number;
   strokeLinecap: string;
   strokeLinejoin: string;
-  paths: string;
+  regularPaths: string;
+  filledPaths: string;
+  regularStrokeBased: boolean;
+  filledStrokeBased: boolean;
 }
 
 export abstract class NavaIconBase extends HTMLElement {
@@ -12,7 +15,7 @@ export abstract class NavaIconBase extends HTMLElement {
   private _shadow: ShadowRoot;
 
   static get observedAttributes(): string[] {
-    return ["size", "color", "stroke-width"];
+    return ["size", "color", "stroke-width", "mode"];
   }
 
   constructor(config: IconBaseConfig) {
@@ -34,6 +37,10 @@ export abstract class NavaIconBase extends HTMLElement {
     return this.getAttribute("stroke-width") || String(this._config.defaultStrokeWidth);
   }
 
+  get mode(): string {
+    return this.getAttribute("mode") || "regular";
+  }
+
   attributeChangedCallback(): void {
     this.render();
   }
@@ -43,21 +50,25 @@ export abstract class NavaIconBase extends HTMLElement {
   }
 
   private render(): void {
+    const isFilled = this.mode === "filled" && this._config.filledPaths;
+    const paths = isFilled ? this._config.filledPaths : this._config.regularPaths;
+    const strokeBased = isFilled ? this._config.filledStrokeBased : this._config.regularStrokeBased;
+
     this._shadow.innerHTML = `
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="${this.size}"
         height="${this.size}"
         viewBox="${this._config.viewBox}"
-        fill="none"
+        fill="${strokeBased ? "none" : "currentColor"}"
         stroke="${this.color}"
         stroke-width="${this.strokeWidth}"
-        stroke-linecap="${this._config.strokeLinecap}"
-        stroke-linejoin="${this._config.strokeLinejoin}"
+        ${strokeBased ? 'stroke-linecap="round"' : ""}
+        ${strokeBased ? 'stroke-linejoin="round"' : ""}
         role="img"
         aria-hidden="true"
       >
-        ${this._config.paths}
+        ${paths}
       </svg>
     `;
   }

@@ -38,14 +38,14 @@ export function IconGallery() {
     return icons.filter(icon => {
       const matchesSearch = !search ||
         icon.name.toLowerCase().includes(search.toLowerCase()) ||
-        icon.tags.some(t => t.toLowerCase().includes(search.toLowerCase()))
+        icon.tags.some(tag => tag.toLowerCase().includes(search.toLowerCase()))
       const matchesCategory = activeCategory === 'all' || icon.categories.includes(activeCategory)
       return matchesSearch && matchesCategory
     })
   }, [search, activeCategory])
 
   const selectedIconData = useMemo(() =>
-    selectedIcon ? icons.find(i => i.name === selectedIcon) : null
+    selectedIcon ? icons.find(icon => icon.name === selectedIcon) : null
   , [selectedIcon])
 
   const codeSnippet = useMemo(() =>
@@ -158,7 +158,7 @@ export function IconGallery() {
                     />
                   </div>
                   <div>
-                    <p className="font-semibold text-[13px] tracking-tight">{selectedIconData.name}</p>
+                    <p className="font-semibold text-[13px]">{selectedIconData.name}</p>
                     <p className="text-[11px] text-surface-400 mt-0.5">{selectedIconData.categories.join(', ')}</p>
                   </div>
                 </div>

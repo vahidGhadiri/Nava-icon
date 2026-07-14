@@ -21,6 +21,31 @@ import { Home, Search } from '@nava-icons/vue'
   <Search :size="24" color="gray" />
 </template>`}</code>
       </pre>
+      <h2>Mode</h2>
+      <p>Switch between regular (stroke) and filled (solid) variants with the <code>mode</code> prop.</p>
+      <pre className="not-prose code-block">
+        <code>{`<script setup>
+import { CheckCircle, Home } from '@nava-icons/vue'
+</script>
+
+<template>
+  <CheckCircle mode="regular" />
+  <CheckCircle mode="filled" />
+  <Home mode="filled" color="blue" />
+</template>`}</code>
+      </pre>
+      <h2>Dynamic Import</h2>
+      <pre className="not-prose code-block">
+        <code>{`<script setup>
+import { Icon } from '@nava-icons/vue'
+</script>
+
+<template>
+  <Icon name="home" />
+  <Icon name="search" :size="24" color="gray" />
+  <Icon name="check-circle" mode="filled" />
+</template>`}</code>
+      </pre>
     </article>
   )
 }

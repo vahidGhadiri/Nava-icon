@@ -73,7 +73,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t nava-icons:verify -f docker/Dockerfile .
+        run: docker build -t nava-icon:verify -f docker/Dockerfile .
 
       - name: Run build inside container
-        run: docker run --rm nava-icons:verify pnpm lint
+        run: docker run --rm nava-icon:verify pnpm lint

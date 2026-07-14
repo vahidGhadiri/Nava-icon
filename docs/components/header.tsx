@@ -30,7 +30,7 @@ export function Header() {
               <polyline points="22 8.5 12 15.5 2 8.5" />
             </svg>
           </div>
-          <span className="font-bold text-[15px] tracking-tight text-surface-900 dark:text-white">
+          <span className="font-bold text-[15px] text-surface-900 dark:text-white">
             Nava Icons
           </span>
         </Link>
@@ -56,7 +56,7 @@ export function Header() {
 
         <div className="flex items-center gap-1">
           <a
-            href="https://github.com/your-username/nava-icons"
+            href="https://github.com/vahidGhadiri/nava-icon"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-lg p-2 text-surface-400 hover:text-surface-900 dark:text-surface-500 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200"

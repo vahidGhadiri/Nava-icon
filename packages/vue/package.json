@@ -1,5 +1,5 @@
 {
-  "name": "@nava-icons/vue",
+  "name": "@nava-icon/vue",
   "version": "0.1.0",
   "type": "module",
   "sideEffects": false,
@@ -30,26 +30,29 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "tsup --config ../../tsup.config.ts",
+    "dev": "tsup --config ../../tsup.config.ts --watch",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
   },
-
   "peerDependencies": {
     "vue": ">=3"
   },
   "devDependencies": {
-    "vue": "^3.5.0",
+    "@types/node": "^26.1.1",
     "tsup": "^8.0.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vue": "^3.5.0"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nava-icons/nava-icons",
+    "url": "https://github.com/nava-icon/nava-icon",
     "directory": "packages/vue"
   }
 }

@@ -7,20 +7,39 @@ export default function APIReference() {
     <article className="prose dark:prose-invert max-w-none">
       <h1>API Reference</h1>
       <p className="text-surface-500 dark:text-surface-400 text-[15px] leading-relaxed">
-        Nava Icons provides two APIs: static imports for tree shaking and a dynamic runtime API.
+        Nava Icons provides two APIs: static imports for tree shaking and a dynamic runtime API. Both support the <code>mode</code> prop.
       </p>
       <h2>Static API (Recommended)</h2>
       <p>Import individual icon components directly. Supports full tree shaking.</p>
       <pre className="not-prose code-block">
-        <code>{`import { Home } from '@nava-icons/react'
-import type { IconName } from '@nava-icons/react'`}</code>
+        <code>{`import { Home, CheckCircle } from '@nava-icons/react'
+import type { IconName, IconMode } from '@nava-icons/react'
+
+<Home size={24} />
+<CheckCircle mode="filled" color="green" />`}</code>
       </pre>
       <h2>Dynamic API</h2>
       <p>Use the <code>&lt;Icon&gt;</code> component for runtime icon selection.</p>
       <pre className="not-prose code-block">
         <code>{`import { Icon } from '@nava-icons/react'
-<Icon name="home" size={24} />`}</code>
+<Icon name="home" size={24} />
+<Icon name="check-circle" mode="filled" />`}</code>
       </pre>
+      <h2>IconMode</h2>
+      <div className="not-prose overflow-x-auto">
+        <table className="w-full text-[13px] border-collapse">
+          <thead>
+            <tr className="border-b border-surface-200 dark:border-surface-800">
+              <th className="text-left py-2.5 font-semibold">Value</th>
+              <th className="text-left py-2.5 font-semibold">Description</th>
+            </tr>
+          </thead>
+          <tbody className="text-surface-500 dark:text-surface-400">
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">"regular"</td><td className="py-2.5">Stroke-based outline (default)</td></tr>
+            <tr><td className="py-2.5 font-mono text-[12px]">"filled"</td><td className="py-2.5">Solid fill variant</td></tr>
+          </tbody>
+        </table>
+      </div>
       <h2>Package Exports</h2>
       <div className="not-prose overflow-x-auto">
         <table className="w-full text-[13px] border-collapse">

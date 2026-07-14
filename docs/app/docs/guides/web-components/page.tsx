@@ -16,6 +16,13 @@ export default function WebComponentsGuide() {
 <nava-icon name="home"></nava-icon>
 <nava-icon name="search" size="24" color="gray"></nava-icon>`}</code>
       </pre>
+      <h2>Mode</h2>
+      <p>Switch between regular (stroke) and filled (solid) variants with the <code>mode</code> attribute.</p>
+      <pre className="not-prose code-block">
+        <code>{`<nava-icon name="check-circle" mode="regular"></nava-icon>
+<nava-icon name="check-circle" mode="filled"></nava-icon>
+<nava-icon name="home" mode="filled" color="blue"></nava-icon>`}</code>
+      </pre>
     </article>
   )
 }

@@ -57,7 +57,7 @@ export default function Home() {
       {/* Icon Grid */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6 py-20 sm:py-28">
         <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-[-0.03em]">All Icons</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-[-0.01em]">All Icons</h2>
           <p className="mt-2 text-[14px] text-surface-500 dark:text-surface-400">
             Click any icon to see usage code across all frameworks.
           </p>

@@ -4,47 +4,59 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const ROOT = join(__dirname, "..");
-const ASSETS_DIR = join(ROOT, "assets");
-
+const ASSETS_DIR = join(ROOT, "assets", "icons");
 const PACKAGES_DIR = join(ROOT, "packages");
 
-interface ManifestEntry {
+type IconMode = "regular" | "filled";
+
+interface IconEntry {
   name: string;
-  fileName: string;
-  categories: string[];
+  regular: string | null;
+  filled: string | null;
 }
 
-interface CollectionMeta {
-  slug: string;
-  variants: string[];
+interface SvgData {
+  viewBox: string;
+  inner: string;
+  strokeBased: boolean;
 }
 
 // ─── Discovery ──────────────────────────────────────────────────────────────
 
-function discoverCollections(): CollectionMeta[] {
-  const collections: CollectionMeta[] = [];
+function discoverIcons(): IconEntry[] {
+  const regularDir = join(ASSETS_DIR, "regular");
+  const filledDir = join(ASSETS_DIR, "filled");
 
-  for (const entry of readdirSync(ASSETS_DIR, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    if (entry.name === "node_modules") continue;
+  const regularFiles = existsSync(regularDir)
+    ? readdirSync(regularDir).filter((f) => f.endsWith(".svg"))
+    : [];
+  const filledFiles = existsSync(filledDir)
+    ? readdirSync(filledDir).filter((f) => f.endsWith(".svg"))
+    : [];
 
-    const collectionDir = join(ASSETS_DIR, entry.name);
-    const variants: string[] = [];
+  const iconMap = new Map<string, IconEntry>();
 
-    for (const variantEntry of readdirSync(collectionDir, { withFileTypes: true })) {
-      if (!variantEntry.isDirectory()) continue;
-      const manifestPath = join(collectionDir, variantEntry.name, "manifest.json");
-      if (existsSync(manifestPath)) {
-        variants.push(variantEntry.name);
-      }
-    }
-
-    if (variants.length > 0) {
-      collections.push({ slug: entry.name, variants });
+  for (const file of regularFiles) {
+    const baseName = file.replace(/^bx-/, "").replace(/\.svg$/, "");
+    const existing = iconMap.get(baseName);
+    if (existing) {
+      existing.regular = join(regularDir, file);
+    } else {
+      iconMap.set(baseName, { name: baseName, regular: join(regularDir, file), filled: null });
     }
   }
 
-  return collections;
+  for (const file of filledFiles) {
+    const baseName = file.replace(/^bxs-/, "").replace(/\.svg$/, "");
+    const existing = iconMap.get(baseName);
+    if (existing) {
+      existing.filled = join(filledDir, file);
+    } else {
+      iconMap.set(baseName, { name: baseName, regular: null, filled: join(filledDir, file) });
+    }
+  }
+
+  return Array.from(iconMap.values());
 }
 
 // ─── SVG Analysis ───────────────────────────────────────────────────────────
@@ -53,24 +65,36 @@ function isStrokeBased(svgContent: string): boolean {
   return svgContent.includes('fill="none"') && svgContent.includes("stroke=");
 }
 
-function parseSvg(svgContent: string): { viewBox: string; inner: string } {
+function parseSvg(svgContent: string): SvgData {
   const viewBoxMatch = svgContent.match(/viewBox=["']([^"']+)["']/);
   const viewBox = viewBoxMatch ? viewBoxMatch[1] : "0 0 24 24";
-
   const innerMatch = svgContent.match(/<svg[^>]*>([\s\S]*?)<\/svg>/);
   const inner = innerMatch ? innerMatch[1] : "";
+  return { viewBox, inner, strokeBased: isStrokeBased(svgContent) };
+}
 
-  return { viewBox, inner };
+function toPascalCase(str: string): string {
+  return str
+    .split(/[-_\s]+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join("");
 }
 
 // ─── React Generation ───────────────────────────────────────────────────────
 
-function generateReactComponent(
-  componentName: string,
-  svgContent: string,
-  strokeBased: boolean
-): string {
-  const { viewBox, inner } = parseSvg(svgContent);
+function generateReactComponent(icon: IconEntry): string {
+  const componentName = toPascalCase(icon.name) + "Icon";
+  const regularSvg = icon.regular ? parseSvg(readFileSync(icon.regular, "utf-8")) : null;
+  const filledSvg = icon.filled ? parseSvg(readFileSync(icon.filled, "utf-8")) : null;
+
+  const defaultSvg = regularSvg || filledSvg;
+  if (!defaultSvg) return "";
+
+  const regularInner = regularSvg ? escapeTemplateLiteral(regularSvg.inner) : "";
+  const filledInner = filledSvg ? escapeTemplateLiteral(filledSvg.inner) : "";
+  const viewBox = defaultSvg.viewBox;
+  const isRegularStrokeBased = regularSvg?.strokeBased ?? false;
+  const isFilledStrokeBased = filledSvg?.strokeBased ?? false;
 
   return `import type { SVGProps } from "react";
 
@@ -79,7 +103,11 @@ interface IconProps extends Omit<SVGProps<SVGSVGElement>, "width" | "height"> {
   color?: string;
   strokeWidth?: number | string;
   title?: string;
+  mode?: "regular" | "filled";
 }
+
+const regularPaths = \`${regularInner}\`;
+const filledPaths = \`${filledInner}\`;
 
 export function ${componentName}({
   size = 24,
@@ -88,25 +116,30 @@ export function ${componentName}({
   className,
   style,
   title,
+  mode = "regular",
   ...rest
 }: IconProps) {
+  const isFilled = mode === "filled" && filledPaths;
+  const paths = isFilled ? filledPaths : regularPaths;
+  const strokeBased = isFilled ? ${isFilledStrokeBased} : ${isRegularStrokeBased};
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="${viewBox}"
       width={size}
       height={size}
-      fill="${strokeBased ? "none" : "currentColor"}"
+      fill={strokeBased ? "none" : "currentColor"}
       stroke={color || "currentColor"}
-      strokeWidth={strokeWidth || ${strokeBased ? 2 : "undefined"}}
-      ${strokeBased ? 'strokeLinecap="round"' : ""}
-      ${strokeBased ? 'strokeLinejoin="round"' : ""}
+      strokeWidth={strokeWidth || (strokeBased ? 2 : undefined)}
+      strokeLinecap={strokeBased ? "round" : undefined}
+      strokeLinejoin={strokeBased ? "round" : undefined}
       className={className}
       style={style}
       {...rest}
     >
       {title && <title>{title}</title>}
-      ${inner}
+      <g dangerouslySetInnerHTML={{ __html: paths }} />
     </svg>
   );
 }
@@ -115,49 +148,62 @@ export function ${componentName}({
 
 // ─── Vue Generation ─────────────────────────────────────────────────────────
 
-function generateVueComponent(
-  componentName: string,
-  svgContent: string,
-  strokeBased: boolean
-): string {
-  const { viewBox, inner } = parseSvg(svgContent);
-  const escapedInner = inner.replace(/\\/g, "\\\\").replace(/`/g, "\\`").replace(/\$/g, "\\$");
+function generateVueComponent(icon: IconEntry): string {
+  const componentName = toPascalCase(icon.name) + "Icon";
+  const regularSvg = icon.regular ? parseSvg(readFileSync(icon.regular, "utf-8")) : null;
+  const filledSvg = icon.filled ? parseSvg(readFileSync(icon.filled, "utf-8")) : null;
+
+  const defaultSvg = regularSvg || filledSvg;
+  if (!defaultSvg) return "";
+
+  const regularInner = regularSvg ? escapeTemplateLiteral(regularSvg.inner) : "";
+  const filledInner = filledSvg ? escapeTemplateLiteral(filledSvg.inner) : "";
+  const viewBox = defaultSvg.viewBox;
+  const isRegularStrokeBased = regularSvg?.strokeBased ?? false;
+  const isFilledStrokeBased = filledSvg?.strokeBased ?? false;
 
   return `import { defineComponent, h, type PropType } from "vue";
 
-const svgContent = \`${escapedInner}\`;
+const regularPaths = \`${regularInner}\`;
+const filledPaths = \`${filledInner}\`;
 
 export const ${componentName} = defineComponent({
   name: "${componentName}",
   props: {
     size: { type: [Number, String] as PropType<number | string>, default: 24 },
     color: { type: String, default: "currentColor" },
-    strokeWidth: { type: [Number, String] as PropType<number | string>, default: ${strokeBased ? 2 : "undefined"} },
+    strokeWidth: { type: [Number, String] as PropType<number | string>, default: 2 },
     className: { type: String },
     style: { type: Object as PropType<Record<string, string | number>> },
     title: { type: String },
+    mode: { type: String as PropType<"regular" | "filled">, default: "regular" },
   },
   setup(props, { attrs }) {
-    return () =>
-      h(
+    return () => {
+      const isFilled = props.mode === "filled" && filledPaths;
+      const paths = isFilled ? filledPaths : regularPaths;
+      const strokeBased = isFilled ? ${isFilledStrokeBased} : ${isRegularStrokeBased};
+
+      return h(
         "svg",
         {
           xmlns: "http://www.w3.org/2000/svg",
           viewBox: "${viewBox}",
           width: props.size,
           height: props.size,
-          fill: "${strokeBased ? "none" : "currentColor"}",
+          fill: strokeBased ? "none" : "currentColor",
           stroke: props.color || "currentColor",
           strokeWidth: props.strokeWidth,
-          ${strokeBased ? '"stroke-linecap": "round",' : ""}
-          ${strokeBased ? '"stroke-linejoin": "round",' : ""}
+          "stroke-linecap": strokeBased ? "round" : undefined,
+          "stroke-linejoin": strokeBased ? "round" : undefined,
           class: props.className,
           style: props.style,
-          innerHTML: svgContent,
+          innerHTML: paths,
           ...attrs,
         },
         [props.title ? h("title", props.title) : null]
       );
+    };
   },
 });
 `;
@@ -165,22 +211,26 @@ export const ${componentName} = defineComponent({
 
 // ─── Angular Generation ─────────────────────────────────────────────────────
 
-function generateAngularComponent(
-  componentName: string,
-  svgContent: string,
-  strokeBased: boolean
-): string {
-  const { viewBox, inner } = parseSvg(svgContent);
+function generateAngularComponent(icon: IconEntry): string {
+  const componentName = toPascalCase(icon.name) + "Icon";
+  const regularSvg = icon.regular ? parseSvg(readFileSync(icon.regular, "utf-8")) : null;
+  const filledSvg = icon.filled ? parseSvg(readFileSync(icon.filled, "utf-8")) : null;
 
-  const selector = componentName
-    .replace(/([A-Z])/g, "-$1")
-    .toLowerCase()
-    .replace(/^-/, "");
+  const defaultSvg = regularSvg || filledSvg;
+  if (!defaultSvg) return "";
+
+  const regularInner = regularSvg ? escapeTemplateLiteral(regularSvg.inner) : "";
+  const filledInner = filledSvg ? escapeTemplateLiteral(filledSvg.inner) : "";
+  const viewBox = defaultSvg.viewBox;
+  const isRegularStrokeBased = regularSvg?.strokeBased ?? false;
+  const isFilledStrokeBased = filledSvg?.strokeBased ?? false;
+
+  const selector = "icon-" + icon.name;
 
   return `import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
 
 @Component({
-  selector: "icon-${selector}",
+  selector: "${selector}",
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: \`
     <svg
@@ -188,51 +238,53 @@ function generateAngularComponent(
       viewBox="${viewBox}"
       [attr.width]="size"
       [attr.height]="size"
-      fill="${strokeBased ? "none" : "currentColor"}"
+      [attr.fill]="isFilled ? '${isFilledStrokeBased ? "none" : "currentColor"}' : '${isRegularStrokeBased ? "none" : "currentColor"}'"
       [attr.stroke]="color || 'currentColor'"
       [attr.stroke-width]="strokeWidth"
-      ${strokeBased ? 'stroke-linecap="round"' : ""}
-      ${strokeBased ? 'stroke-linejoin="round"' : ""}
+      [attr.stroke-linecap]="isFilled ? '${isFilledStrokeBased ? "round" : ""}' : '${isRegularStrokeBased ? "round" : ""}'"
+      [attr.stroke-linejoin]="isFilled ? '${isFilledStrokeBased ? "round" : ""}' : '${isRegularStrokeBased ? "round" : ""}'"
     >
-      ${inner}
+      <ng-container [ngSwitch]="mode">
+        <g *ngSwitchCase="'filled'" [innerHTML]="'${filledInner}'"></g>
+        <g *ngSwitchDefault [innerHTML]="'${regularInner}'"></g>
+      </ng-container>
     </svg>
   \`,
 })
 export class ${componentName}Component {
   @Input() size: number | string = 24;
   @Input() color: string = "currentColor";
-  @Input() strokeWidth: number | string = ${strokeBased ? 2 : "undefined"};
+  @Input() strokeWidth: number | string = 2;
+  @Input() mode: "regular" | "filled" = "regular";
+
+  get isFilled(): boolean {
+    return this.mode === "filled";
+  }
 }
 `;
 }
 
 // ─── Web Component Generation ───────────────────────────────────────────────
 
-function generateWebComponent(
-  componentName: string,
-  svgContent: string,
-  strokeBased: boolean
-): string {
-  const { viewBox, inner } = parseSvg(svgContent);
+function generateWebComponent(icon: IconEntry): string {
+  const componentName = toPascalCase(icon.name);
+  const regularSvg = icon.regular ? parseSvg(readFileSync(icon.regular, "utf-8")) : null;
+  const filledSvg = icon.filled ? parseSvg(readFileSync(icon.filled, "utf-8")) : null;
 
-  const tagName = "icon-" + componentName
-    .replace(/([A-Z])/g, "-$1")
-    .toLowerCase()
-    .replace(/^-/, "");
+  const defaultSvg = regularSvg || filledSvg;
+  if (!defaultSvg) return "";
 
-  return `const attrs = {
-  xmlns: "http://www.w3.org/2000/svg",
-  viewBox: "${viewBox}",
-  fill: "${strokeBased ? "none" : "currentColor"}",
-  stroke: "currentColor",
-  strokeWidth: "${strokeBased ? "2" : ""}",
-  ${strokeBased ? '"stroke-linecap": "round",' : ""}
-  ${strokeBased ? '"stroke-linejoin": "round",' : ""}
-};
+  const regularInner = regularSvg ? escapeTemplateLiteral(regularSvg.inner) : "";
+  const filledInner = filledSvg ? escapeTemplateLiteral(filledSvg.inner) : "";
+  const viewBox = defaultSvg.viewBox;
+  const isRegularStrokeBased = regularSvg?.strokeBased ?? false;
+  const isFilledStrokeBased = filledSvg?.strokeBased ?? false;
 
-class NavaIcon${componentName} extends HTMLElement {
+  const tagName = "icon-" + icon.name;
+
+  return `class NavaIcon${componentName} extends HTMLElement {
   static get observedAttributes() {
-    return ["size", "color", "stroke-width"];
+    return ["size", "color", "stroke-width", "mode"];
   }
 
   constructor() {
@@ -251,21 +303,28 @@ class NavaIcon${componentName} extends HTMLElement {
   render() {
     const size = this.getAttribute("size") || "24";
     const color = this.getAttribute("color") || "currentColor";
-    const strokeWidth = this.getAttribute("stroke-width") || "${strokeBased ? "2" : ""}";
+    const strokeWidth = this.getAttribute("stroke-width") || "2";
+    const mode = this.getAttribute("mode") || "regular";
+    const isFilled = mode === "filled";
+
+    const regularPaths = \`${regularInner}\`;
+    const filledPaths = \`${filledInner}\`;
+    const paths = isFilled && filledPaths ? filledPaths : regularPaths;
+    const strokeBased = isFilled ? ${isFilledStrokeBased} : ${isRegularStrokeBased};
 
     this.shadowRoot!.innerHTML = \`
       <svg
-        xmlns="\${attrs.xmlns}"
-        viewBox="\${attrs.viewBox}"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="${viewBox}"
         width="\${size}"
         height="\${size}"
-        fill="\${attrs.fill}"
+        fill="\${strokeBased ? "none" : "currentColor"}"
         stroke="\${color}"
         stroke-width="\${strokeWidth}"
-        ${strokeBased ? 'stroke-linecap="round"' : ""}
-        ${strokeBased ? 'stroke-linejoin="round"' : ""}
+        \${strokeBased ? 'stroke-linecap="round"' : ""}
+        \${strokeBased ? 'stroke-linejoin="round"' : ""}
       >
-        ${inner}
+        \${paths}
       </svg>
     \`;
   }
@@ -277,137 +336,77 @@ if (!customElements.get("${tagName}")) {
 `;
 }
 
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
+function escapeTemplateLiteral(str: string): string {
+  return str.replace(/\\/g, "\\\\").replace(/`/g, "\\`").replace(/\$/g, "\\$");
+}
+
 // ─── Index File Generation ──────────────────────────────────────────────────
 
-function generateReactIndex(entries: ManifestEntry[]): string {
-  return entries.map((e) => `export { ${e.name} } from "./${e.name}.js";`).join("\n") + "\n";
+function generateReactIndex(icons: IconEntry[]): string {
+  return icons
+    .map((icon) => `export { ${toPascalCase(icon.name)}Icon } from "./${icon.name}.js";`)
+    .join("\n") + "\n";
 }
 
-function generateVueIndex(entries: ManifestEntry[]): string {
-  return entries.map((e) => `export { ${e.name} } from "./${e.name}.js";`).join("\n") + "\n";
+function generateVueIndex(icons: IconEntry[]): string {
+  return icons
+    .map((icon) => `export { ${toPascalCase(icon.name)}Icon } from "./${icon.name}.js";`)
+    .join("\n") + "\n";
 }
 
-function generateAngularIndex(entries: ManifestEntry[]): string {
-  return entries.map((e) => `export { ${e.name}Component } from "./${e.name}.component.js";`).join("\n") + "\n";
+function generateAngularIndex(icons: IconEntry[]): string {
+  return icons
+    .map((icon) => `export { ${toPascalCase(icon.name)}IconComponent } from "./${icon.name}.component.js";`)
+    .join("\n") + "\n";
 }
 
-function generateWebComponentsIndex(entries: ManifestEntry[]): string {
-  return entries.map((e) => `import "./${e.name}.js";`).join("\n") + "\n";
-}
-
-// ─── Package.json Export Generation ─────────────────────────────────────────
-
-function updatePackageExports(
-  pkgDir: string,
-  allExports: string[]
-) {
-  const pkgPath = join(pkgDir, "package.json");
-  if (!existsSync(pkgPath)) return;
-
-  const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
-
-  for (const exp of allExports) {
-    if (!pkg.exports[exp]) {
-      pkg.exports[exp] = {
-        types: `./dist${exp.slice(1)}.d.ts`,
-        import: `./dist${exp.slice(1)}.mjs`,
-        require: `./dist${exp.slice(1)}.cjs`,
-      };
-    }
-  }
-
-  writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
+function generateWebComponentsIndex(icons: IconEntry[]): string {
+  return icons
+    .map((icon) => `import "./${icon.name}.js";`)
+    .join("\n") + "\n";
 }
 
 // ─── Main Generation ────────────────────────────────────────────────────────
 
 function main() {
-  const collections = discoverCollections();
+  const icons = discoverIcons();
 
-  console.log(`\nFound ${collections.length} collections in assets/\n`);
+  console.log(`\nFound ${icons.length} icons in assets/icons/\n`);
 
-  let totalIcons = 0;
-
-  const allReactExports: string[] = [];
-  const allVueExports: string[] = [];
-  const allAngularExports: string[] = [];
-  const allWcExports: string[] = [];
-
-  // React
   const reactIconsDir = join(PACKAGES_DIR, "react", "src", "icons");
-  mkdirSync(reactIconsDir, { recursive: true });
-
-  // Vue
   const vueIconsDir = join(PACKAGES_DIR, "vue", "src", "icons");
-  mkdirSync(vueIconsDir, { recursive: true });
-
-  // Angular
   const angularIconsDir = join(PACKAGES_DIR, "angular", "src", "icons");
-  mkdirSync(angularIconsDir, { recursive: true });
-
-  // Web Components
   const wcIconsDir = join(PACKAGES_DIR, "web-components", "src", "icons");
+
+  mkdirSync(reactIconsDir, { recursive: true });
+  mkdirSync(vueIconsDir, { recursive: true });
+  mkdirSync(angularIconsDir, { recursive: true });
   mkdirSync(wcIconsDir, { recursive: true });
 
-  for (const collection of collections) {
-    for (const variant of collection.variants) {
-      const variantDir = join(ASSETS_DIR, collection.slug, variant);
-      const manifestPath = join(variantDir, "manifest.json");
+  for (const icon of icons) {
+    console.log(`  ${icon.name} (regular: ${!!icon.regular}, filled: ${!!icon.filled})`);
 
-      if (!existsSync(manifestPath)) continue;
+    const reactComponent = generateReactComponent(icon);
+    if (reactComponent) writeFileSync(join(reactIconsDir, `${icon.name}.tsx`), reactComponent);
 
-      const manifest: ManifestEntry[] = JSON.parse(readFileSync(manifestPath, "utf-8"));
-      console.log(`  ${collection.slug}/${variant}: ${manifest.length} icons`);
+    const vueComponent = generateVueComponent(icon);
+    if (vueComponent) writeFileSync(join(vueIconsDir, `${icon.name}.ts`), vueComponent);
 
-      const reactEntries: ManifestEntry[] = [];
-      const vueEntries: ManifestEntry[] = [];
-      const angularEntries: ManifestEntry[] = [];
-      const wcEntries: ManifestEntry[] = [];
+    const angularComponent = generateAngularComponent(icon);
+    if (angularComponent) writeFileSync(join(angularIconsDir, `${icon.name}.component.ts`), angularComponent);
 
-      for (const entry of manifest) {
-        const svgPath = join(variantDir, entry.fileName);
-        if (!existsSync(svgPath)) continue;
-
-        const svgContent = readFileSync(svgPath, "utf-8");
-        const strokeBased = isStrokeBased(svgContent);
-
-        // React
-        const reactComponent = generateReactComponent(entry.name, svgContent, strokeBased);
-        writeFileSync(join(reactIconsDir, `${entry.name}.tsx`), reactComponent);
-        reactEntries.push(entry);
-
-        // Vue
-        const vueComponent = generateVueComponent(entry.name, svgContent, strokeBased);
-        writeFileSync(join(vueIconsDir, `${entry.name}.ts`), vueComponent);
-        vueEntries.push(entry);
-
-        // Angular
-        const angularComponent = generateAngularComponent(entry.name, svgContent, strokeBased);
-        writeFileSync(join(angularIconsDir, `${entry.name}.component.ts`), angularComponent);
-        angularEntries.push(entry);
-
-        // Web Components
-        const wcComponent = generateWebComponent(entry.name, svgContent, strokeBased);
-        writeFileSync(join(wcIconsDir, `${entry.name}.ts`), wcComponent);
-        wcEntries.push(entry);
-
-        totalIcons++;
-      }
-
-      // Generate index files
-      writeFileSync(join(reactIconsDir, "index.ts"), generateReactIndex(reactEntries));
-      writeFileSync(join(vueIconsDir, "index.ts"), generateVueIndex(vueEntries));
-      writeFileSync(join(angularIconsDir, "index.ts"), generateAngularIndex(angularEntries));
-      writeFileSync(join(wcIconsDir, "index.ts"), generateWebComponentsIndex(wcEntries));
-
-      allReactExports.push(...reactEntries.map((e) => e.name));
-      allVueExports.push(...vueEntries.map((e) => e.name));
-      allAngularExports.push(...angularEntries.map((e) => e.name));
-      allWcExports.push(...wcEntries.map((e) => e.name));
-    }
+    const wcComponent = generateWebComponent(icon);
+    if (wcComponent) writeFileSync(join(wcIconsDir, `${icon.name}.ts`), wcComponent);
   }
 
-  console.log(`\nGenerated ${totalIcons} icon components across 4 frameworks\n`);
+  writeFileSync(join(reactIconsDir, "index.ts"), generateReactIndex(icons));
+  writeFileSync(join(vueIconsDir, "index.ts"), generateVueIndex(icons));
+  writeFileSync(join(angularIconsDir, "index.ts"), generateAngularIndex(icons));
+  writeFileSync(join(wcIconsDir, "index.ts"), generateWebComponentsIndex(icons));
+
+  console.log(`\nGenerated ${icons.length} icon components across 4 frameworks\n`);
 }
 
 main();

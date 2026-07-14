@@ -1,6 +1,6 @@
-import type { Metadata } from 'next'
+import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: 'Dynamic API' }
+export const metadata: Metadata = { title: "Dynamic API" };
 
 export default function DynamicAPI() {
   return (
@@ -11,13 +11,13 @@ export default function DynamicAPI() {
       </p>
       <h2>React</h2>
       <pre className="not-prose code-block">
-        <code>{`import { Icon } from '@nava-icons/react'
+        <code>{`import { Icon } from '@nava-icon/react'
 <Icon name="home" size={24} color="blue" />`}</code>
       </pre>
       <h2>Vue</h2>
       <pre className="not-prose code-block">
         <code>{`<script setup>
-import { Icon } from '@nava-icons/vue'
+import { Icon } from '@nava-icon/vue'
 </script>
 
 <template>
@@ -25,7 +25,9 @@ import { Icon } from '@nava-icons/vue'
 </template>`}</code>
       </pre>
       <h2>Trade-offs</h2>
-      <p>Dynamic API bundles all icon data. Use static imports when possible for optimal bundle size.</p>
+      <p>
+        Dynamic API bundles all icon data. Use static imports when possible for optimal bundle size.
+      </p>
     </article>
-  )
+  );
 }
