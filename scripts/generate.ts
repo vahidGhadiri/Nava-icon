@@ -358,6 +358,60 @@ if (!customElements.get("${tagName}")) {
 `;
 }
 
+// ─── Docs Icons Data ────────────────────────────────────────────────────────
+
+function generateDocsIconsData(icons: IconEntry[]): string {
+  const entries = icons.map((icon) => {
+    const svgContent = icon.regular ? readFileSync(icon.regular, "utf-8") : icon.filled ? readFileSync(icon.filled, "utf-8") : "";
+    const innerMatch = svgContent.match(/<svg[^>]*>([\s\S]*?)<\/svg>/);
+    const rawInner = innerMatch ? innerMatch[1].trim() : "";
+    const svgInner = stripHardcodedFill(rawInner);
+    const nameForDisplay = icon.name.replace(/-/g, " ");
+    const category = "general";
+
+    return `  {
+    name: "${icon.name}",
+    svg: \`${escapeTemplateLiteral(svgInner)}\`,
+    tags: ["${nameForDisplay}"],
+    categories: ["${category}"],
+  },`;
+  });
+
+  return `export type Framework = 'react' | 'vue' | 'angular' | 'web-components'
+
+export interface Icon {
+  name: string
+  svg: string
+  tags: string[]
+  categories: string[]
+}
+
+export const categories: string[] = ['general']
+
+export const icons: Icon[] = [
+${entries.join("\n")}
+]
+
+export function getCodeSnippet(name: string, framework: Framework): string {
+  const pascal = name
+    .split(/[-_]+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join('')
+
+  switch (framework) {
+    case 'react':
+      return \`import { \${pascal}Icon } from '@nava-icons/react'\n\n<\${pascal}Icon size={24} color="currentColor" />\`
+    case 'vue':
+      return \`<script setup>\nimport { \${pascal}Icon } from '@nava-icons/vue'\n</script>\n\n<\${pascal}Icon :size="24" color="currentColor" />\`
+    case 'angular':
+      return \`// In your module:\nimport { \${pascal}IconComponent } from '@nava-icons/angular'\n\n// In your template:\n<icon-\${name} [size]="24" color="currentColor"></icon-\${name}>\`
+    case 'web-components':
+      return \`<script type="module" src="@nava-icons/web-components"></script>\n\n<icon-\${name} size="24" color="currentColor"></icon-\${name}>\`
+  }
+}
+`;
+}
+
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 function escapeTemplateLiteral(str: string): string {
@@ -427,6 +481,10 @@ function main() {
   writeFileSync(join(vueIconsDir, "index.ts"), generateVueIndex(icons));
   writeFileSync(join(angularIconsDir, "index.ts"), generateAngularIndex(icons));
   writeFileSync(join(wcIconsDir, "index.ts"), generateWebComponentsIndex(icons));
+
+  const docsLibDir = join(ROOT, "docs", "lib");
+  mkdirSync(docsLibDir, { recursive: true });
+  writeFileSync(join(docsLibDir, "icons.ts"), generateDocsIconsData(icons));
 
   console.log(`\nGenerated ${icons.length} icon components across 4 frameworks\n`);
 }
