@@ -1,12 +1,11 @@
 name: CI/CD
 
 on:
-  push:
+  pull_request:
     branches:
       - develop
       - stage
       - main
-      - "release/**"
     paths:
       - "assets/**"
       - "packages/**"
@@ -17,12 +16,9 @@ on:
       - "pnpm-lock.yaml"
       - ".github/workflows/ci.yml"
 
-  pull_request:
+  push:
     branches:
-      - develop
-      - stage
       - main
-      - "release/**"
     paths:
       - "assets/**"
       - "packages/**"
@@ -34,7 +30,7 @@ on:
       - ".github/workflows/ci.yml"
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.event.pull_request.base.ref || github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -44,10 +40,12 @@ jobs:
   verify:
     name: Verify
 
+    if: github.event_name == 'pull_request'
+
     runs-on: ubuntu-latest
 
     environment:
-      name: ${{ github.ref_name == 'main' && 'PRODUCTION' || github.ref_name == 'stage' && 'STAGING' || 'DEV' }}
+      name: ${{ github.base_ref == 'main' && 'PRODUCTION' || github.base_ref == 'stage' && 'STAGING' || 'DEV' }}
 
     steps:
       - name: Checkout
@@ -79,7 +77,19 @@ jobs:
 
     needs: verify
 
-    if: github.ref_name == 'stage' || github.ref_name == 'main'
+    if: |
+      github.event_name == 'pull_request' &&
+      (
+        (
+          github.base_ref == 'stage' &&
+          startsWith(github.head_ref, 'release/stage')
+        )
+        ||
+        (
+          github.base_ref == 'main' &&
+          startsWith(github.head_ref, 'release/prod')
+        )
+      )
 
     runs-on: ubuntu-latest
 
@@ -88,7 +98,7 @@ jobs:
       packages: write
 
     environment:
-      name: ${{ github.ref_name == 'main' && 'PRODUCTION' || 'STAGING' }}
+      name: ${{ github.base_ref == 'main' && 'PRODUCTION' || 'STAGING' }}
 
     steps:
       - name: Checkout
@@ -112,15 +122,16 @@ jobs:
           tags: |
             type=sha
             type=ref,event=branch
-            type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build & Push Docker Image
+      - name: Build Docker Image
         uses: docker/build-push-action@v6
         with:
           context: .
           file: docker/Dockerfile
 
-          push: true
+          # فقط validate build
+          # push بعد از merge/deploy انجام شود
+          push: false
 
           tags: ${{ steps.meta.outputs.tags }}
 
@@ -132,9 +143,9 @@ jobs:
   publish:
     name: Publish packages to npm
 
-    needs: docker
-
-    if: github.ref_name == 'main'
+    if: |
+      github.event_name == 'push' &&
+      github.ref_name == 'main'
 
     runs-on: ubuntu-latest
 
