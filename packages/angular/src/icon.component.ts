@@ -20,7 +20,7 @@ function normalizeIconName(name: string): string {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-container *ngIf="iconComponent">
-      <ng-container *ngComponentOutlet="iconComponent; inputs: { size: size, color: color, strokeWidth: strokeWidth }" />
+      <ng-container *ngComponentOutlet="iconComponent; inputs: { size: size, color: color, strokeWidth: strokeWidth, mode: mode }" />
     </ng-container>
   `,
 })
@@ -28,15 +28,15 @@ export class IconComponent {
   @Input() name: IconName | string = "";
   @Input() size: number | string = 24;
   @Input() color: string = "currentColor";
-  @Input() strokeWidth: number | string = 2;
+  @Input() strokeWidth: number | string = 0.5;
+  @Input() mode: "regular" | "filled" = "regular";
 
   get iconComponent(): any {
     if (!this.name) return null;
     const iconName = normalizeIconName(this.name as string);
-    const mod = (iconModules as Record<string, unknown>)[`${iconName}Component`];
-    if (mod) return mod;
-    // Fallback: try without "Component" suffix
-    const modAlt = (iconModules as Record<string, unknown>)[iconName];
-    return modAlt || null;
+    const iconModule = (iconModules as Record<string, unknown>)[`${iconName}Component`];
+    if (iconModule) return iconModule;
+    const alternateModule = (iconModules as Record<string, unknown>)[iconName];
+    return alternateModule || null;
   }
 }

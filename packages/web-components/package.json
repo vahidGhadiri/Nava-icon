@@ -1,5 +1,5 @@
 {
-  "name": "@nava-icons/web-components",
+  "name": "@nava-icon/web-components",
   "version": "0.1.0",
   "type": "module",
   "sideEffects": ["./dist/icons/*.js"],
@@ -22,8 +22,8 @@
   },
   "files": ["dist", "README.md"],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "tsup --config ../../tsup.config.ts",
+    "dev": "tsup --config ../../tsup.config.ts --watch",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
   },
@@ -34,7 +34,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nava-icons/nava-icons",
+    "url": "https://github.com/nava-icon/nava-icon",
     "directory": "packages/web-components"
   }
 }

@@ -31,7 +31,11 @@ export default defineComponent({
     },
     strokeWidth: {
       type: [Number, String] as PropType<number | string>,
-      default: 2,
+      default: 0.5,
+    },
+    mode: {
+      type: String as PropType<"regular" | "filled">,
+      default: "regular",
     },
   },
   render() {
@@ -40,7 +44,7 @@ export default defineComponent({
 
     if (!Component) {
       if (typeof console !== "undefined") {
-        console.warn(`[nava-icons] Icon "${this.name}" not found.`);
+        console.warn(`[nava-icon] Icon "${this.name}" not found.`);
       }
       return null;
     }
@@ -48,6 +52,7 @@ export default defineComponent({
       size: this.size,
       color: this.color,
       strokeWidth: this.strokeWidth,
+      mode: this.mode,
       ...this.$attrs,
     });
   },

@@ -18,6 +18,8 @@ export interface IconProps extends Omit<SVGProps<SVGSVGElement>, "width" | "heig
   strokeWidth?: number | string;
   /** Accessible title */
   title?: string;
+  /** Icon mode: "regular" (stroke) or "filled" (solid) */
+  mode?: "regular" | "filled";
 }
 
 const iconRecord = iconModules as unknown as Record<string, ComponentType<Record<string, unknown>>>;
@@ -35,20 +37,20 @@ function normalizeIconName(name: string): string {
 /**
  * Dynamic icon component.
  *
- * Usage: `<Icon name="home" size={24} color="red" />`
+ * Usage: `<Icon name="home" size={24} color="red" mode="filled" />`
  *
  * **Tree-shaking limitation**: This component imports ALL icons,
  * so it cannot be tree-shaken. For production builds, prefer
  * direct imports: `import { HomeIcon } from "@nava-icons/react"`
  */
 export const Icon = forwardRef<SVGSVGElement, IconProps>(
-  ({ name, size, color, strokeWidth, className, title, style, ...props }, ref) => {
+  ({ name, size, color, strokeWidth, className, title, style, mode, ...props }, ref) => {
     const iconName = normalizeIconName(name);
     const Component = iconRecord[iconName];
 
     if (!Component) {
       if (typeof console !== "undefined") {
-        console.warn(`[nava-icons] Icon "${name}" not found.`);
+        console.warn(`[nava-icon] Icon "${name}" not found.`);
       }
       return null;
     }
@@ -61,6 +63,7 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
       className,
       title,
       style,
+      mode,
       ...props,
     });
   },

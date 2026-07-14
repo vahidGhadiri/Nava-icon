@@ -1,6 +1,6 @@
 services:
   verify:
-    container_name: nava-icons-verify
+    container_name: nava-icon-verify
     build:
       context: ..
       dockerfile: docker/Dockerfile
@@ -9,7 +9,7 @@ services:
       - NODE_ENV=production
 
   publish:
-    container_name: nava-icons-publish
+    container_name: nava-icon-publish
     build:
       context: ..
       dockerfile: docker/Dockerfile

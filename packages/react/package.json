@@ -1,5 +1,5 @@
 {
-  "name": "@nava-icons/react",
+  "name": "@nava-icon/react",
   "version": "0.1.0",
   "type": "module",
   "sideEffects": false,
@@ -32,8 +32,8 @@
   },
   "files": ["dist", "README.md"],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "tsup --config ../../tsup.config.ts",
+    "dev": "tsup --config ../../tsup.config.ts --watch",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
   },
@@ -50,7 +50,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nava-icons/nava-icons",
+    "url": "https://github.com/nava-icon/nava-icon",
     "directory": "packages/react"
   }
 }
