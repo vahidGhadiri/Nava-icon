@@ -63,11 +63,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Generate icons
+      - name: Generate assets
         run: pnpm generate
 
       - name: Lint
         run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
 
       - name: Build
         run: pnpm build
@@ -93,9 +96,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: read
-
     environment:
       name: ${{ github.base_ref == 'main' && 'PRODUCTION' || 'STAGING' }}
 
@@ -113,7 +113,6 @@ jobs:
           context: .
           file: docker/Dockerfile
 
-          # فقط validation
           push: false
 
           cache-from: type=gha
@@ -153,10 +152,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Generate icons
+      - name: Generate assets
         run: pnpm generate
 
-      - name: Build
+      - name: Build packages
         run: pnpm build
 
       - name: Create Release PR or Publish
