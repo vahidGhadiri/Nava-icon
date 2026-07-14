@@ -48,13 +48,3 @@ FROM base AS verifier
 COPY --from=builder /app .
 
 RUN pnpm lint
-
-
-# -----------------------
-# Publish
-# -----------------------
-FROM base AS publisher
-
-COPY --from=builder /app .
-
-RUN pnpm publish:ci
