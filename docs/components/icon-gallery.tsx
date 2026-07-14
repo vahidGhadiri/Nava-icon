@@ -139,19 +139,23 @@ export function IconGallery() {
 
       {/* Category Filters */}
       <div className="flex flex-wrap gap-1.5 mb-6">
-        {['all', ...categories].map(cat => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={`rounded-lg px-3 py-1 text-[11px] font-medium transition-all duration-200 ${
-              activeCategory === cat
-                ? 'bg-primary-500 text-white shadow-sm shadow-primary-500/25'
-                : 'glass-card text-surface-500 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white'
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
+        {['all', ...categories].map(cat => {
+          const count = cat === 'all' ? allIcons.length : allIcons.filter(i => i.categories.includes(cat)).length
+          return (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`rounded-lg px-3 py-1 text-[11px] font-medium transition-all duration-200 ${
+                activeCategory === cat
+                  ? 'bg-primary-500 text-white shadow-sm shadow-primary-500/25'
+                  : 'glass-card text-surface-500 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white'
+              }`}
+            >
+              {cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+              <span className="ml-1 opacity-60">{count}</span>
+            </button>
+          )
+        })}
       </div>
 
       <div className="flex gap-6">
