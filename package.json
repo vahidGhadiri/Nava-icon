@@ -12,8 +12,7 @@
     "build": "turbo run build",
     "build:packages": "turbo run build --filter='./packages/*'",
     "build:docs": "turbo run build --filter='@nava-icon/docs'",
-    "dev": "turbo run dev",
-    "dev:docs": "pnpm --filter @nava-icos/docs dev",
+    "dev": "pnpm --filter @nava-icon/docs dev",
     "validate": "turbo run validate",
     "test": "turbo run test",
     "lint": "turbo run lint",
@@ -30,8 +29,7 @@
     "docker:build": "docker build -t nava-icon:local -f docker/Dockerfile .",
     "docker:verify": "docker run --rm nava-icon:local pnpm lint",
     "docker:shell": "docker run --rm -it nava-icon:local sh",
-    "docker:compose:verify": "docker compose -f deployment/docker-compose.local.yml run --rm verify",
-    "docker:compose:publish": "docker compose -f deployment/docker-compose.local.yml --profile publish run --rm publish"
+    "docker:compose:verify": "docker compose -f deployment/docker-compose.local.yml run --rm verify"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",

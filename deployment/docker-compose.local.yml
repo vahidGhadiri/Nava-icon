@@ -7,15 +7,3 @@ services:
       target: verifier
     environment:
       - NODE_ENV=production
-
-  publish:
-    container_name: nava-icon-publish
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
-      target: publisher
-    environment:
-      - NODE_ENV=production
-      - NPM_TOKEN=${NPM_TOKEN}
-    profiles:
-      - publish
