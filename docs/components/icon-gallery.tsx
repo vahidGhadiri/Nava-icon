@@ -1,7 +1,21 @@
 'use client'
 
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
-import { getCodeSnippet, type Framework, type IconMode, type Icon } from '@/lib/icons'
+import { useState, useMemo, useCallback, useEffect, useRef, memo } from 'react'
+import { getCodeSnippet, type Framework, type IconMode } from '@/lib/icons'
+
+interface IconMeta {
+  name: string
+  tags: string[]
+  categories: string[]
+}
+
+interface IconSvg {
+  name: string
+  regularSvg: string
+  filledSvg: string
+}
+
+interface Icon extends IconMeta, IconSvg {}
 
 const frameworkLabels: Record<Framework, string> = {
   react: 'React',
@@ -12,7 +26,16 @@ const frameworkLabels: Record<Framework, string> = {
 
 const PAGE_SIZE = 60
 
-function IconPreview({ svg }: { svg: string }) {
+function useDebounce<T>(value: T, delay: number): T {
+  const [debounced, setDebounced] = useState(value)
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delay)
+    return () => clearTimeout(t)
+  }, [value, delay])
+  return debounced
+}
+
+const IconPreview = memo(function IconPreview({ svg }: { svg: string }) {
   return (
     <svg
       width="24"
@@ -23,11 +46,13 @@ function IconPreview({ svg }: { svg: string }) {
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   )
-}
+})
 
 export function IconGallery() {
-  const [allIcons, setAllIcons] = useState<Icon[]>([])
-  const [loading, setLoading] = useState(true)
+  const [meta, setMeta] = useState<IconMeta[]>([])
+  const [svgData, setSvgData] = useState<Map<string, IconSvg>>(new Map())
+  const [metaLoaded, setMetaLoaded] = useState(false)
+  const [svgLoaded, setSvgLoaded] = useState(false)
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState<string>('all')
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null)
@@ -39,36 +64,63 @@ export function IconGallery() {
   const sentinelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    fetch('/icons-manifest.json')
+    fetch('/icons-meta.json')
       .then(r => r.json())
-      .then((data: Icon[]) => {
-        setAllIcons(data)
-        setLoading(false)
+      .then((data: IconMeta[]) => {
+        setMeta(data)
+        setMetaLoaded(true)
       })
-      .catch(() => setLoading(false))
+      .catch(() => setMetaLoaded(true))
   }, [])
 
+  useEffect(() => {
+    fetch('/icons-svg.json')
+      .then(r => r.json())
+      .then((data: IconSvg[]) => {
+        const map = new Map<string, IconSvg>()
+        for (const item of data) {
+          map.set(item.name, item)
+        }
+        setSvgData(map)
+        setSvgLoaded(true)
+      })
+      .catch(() => setSvgLoaded(true))
+  }, [])
+
+  const loading = !metaLoaded
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: meta.length }
+    for (const icon of meta) {
+      for (const cat of icon.categories) {
+        counts[cat] = (counts[cat] || 0) + 1
+      }
+    }
+    return counts
+  }, [meta])
+
+  const categories = useMemo(() => Object.keys(categoryCounts).filter(c => c !== 'all'), [categoryCounts])
+
+  const debouncedSearch = useDebounce(search, 150)
+
   const filtered = useMemo(() => {
-    return allIcons.filter(icon => {
-      const matchesSearch = !search ||
-        icon.name.toLowerCase().includes(search.toLowerCase()) ||
-        icon.tags.some(tag => tag.toLowerCase().includes(search.toLowerCase()))
+    if (!debouncedSearch && activeCategory === 'all') return meta
+    const lowerSearch = debouncedSearch.toLowerCase()
+    return meta.filter(icon => {
+      const matchesSearch = !debouncedSearch ||
+        icon.name.toLowerCase().includes(lowerSearch) ||
+        icon.tags.some(tag => tag.toLowerCase().includes(lowerSearch))
       const matchesCategory = activeCategory === 'all' || icon.categories.includes(activeCategory)
       return matchesSearch && matchesCategory
     })
-  }, [allIcons, search, activeCategory])
+  }, [meta, debouncedSearch, activeCategory])
 
   const visibleIcons = useMemo(() => filtered.slice(0, visibleCount), [filtered, visibleCount])
   const hasMore = visibleCount < filtered.length
 
-  const categories = useMemo(() => {
-    const cats = new Set<string>()
-    allIcons.forEach(icon => icon.categories.forEach(c => cats.add(c)))
-    return Array.from(cats)
-  }, [allIcons])
-
   useEffect(() => {
-    if (!sentinelRef.current || !hasMore) return
+    const el = sentinelRef.current
+    if (!el || !hasMore) return
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
@@ -77,16 +129,23 @@ export function IconGallery() {
       },
       { rootMargin: '200px' }
     )
-    observer.observe(sentinelRef.current)
+    observer.observe(el)
     return () => observer.disconnect()
   }, [hasMore])
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE)
-  }, [search, activeCategory])
+  }, [debouncedSearch, activeCategory])
+
+  const allIcons: Icon[] = useMemo(() => {
+    return meta.map(m => {
+      const svg = svgData.get(m.name)
+      return { ...m, regularSvg: svg?.regularSvg || '', filledSvg: svg?.filledSvg || '' }
+    })
+  }, [meta, svgData])
 
   const selectedIconData = useMemo(() =>
-    selectedIcon ? allIcons.find(icon => icon.name === selectedIcon) : null
+    selectedIcon ? allIcons.find(icon => icon.name === selectedIcon) || null : null
   , [selectedIcon, allIcons])
 
   const codeSnippet = useMemo(() =>
@@ -140,59 +199,66 @@ export function IconGallery() {
 
       {/* Category Filters */}
       <div className="flex flex-wrap gap-1.5 mb-6">
-        {['all', ...categories].map(cat => {
-          const count = cat === 'all' ? allIcons.length : allIcons.filter(i => i.categories.includes(cat)).length
-          return (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-[11px] font-medium transition-all duration-200 ${
-                activeCategory === cat
-                  ? 'bg-primary-500 text-white shadow-sm shadow-primary-500/25'
-                  : 'glass-card text-surface-500 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white'
-              }`}
-            >
-              <span>{cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
-              <span className={`inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full text-[9px] font-bold ${
-                activeCategory === cat
-                  ? 'bg-white/20 text-white'
-                  : 'bg-surface-200 dark:bg-white/10 text-surface-500 dark:text-surface-400'
-              }`}>
-                {count}
-              </span>
-            </button>
-          )
-        })}
+        {['all', ...categories].map(cat => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-[11px] font-medium transition-all duration-200 ${
+              activeCategory === cat
+                ? 'bg-primary-500 text-white shadow-sm shadow-primary-500/25'
+                : 'glass-card text-surface-500 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white'
+            }`}
+          >
+            <span>{cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
+            <span className={`inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full text-[9px] font-bold ${
+              activeCategory === cat
+                ? 'bg-white/20 text-white'
+                : 'bg-surface-200 dark:bg-white/10 text-surface-500 dark:text-surface-400'
+            }`}>
+              {categoryCounts[cat] || 0}
+            </span>
+          </button>
+        ))}
       </div>
 
       <div className="flex gap-6">
         {/* Grid */}
         <div className="flex-1 min-w-0">
           <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-2">
-            {visibleIcons.map(icon => (
-              <button
-                key={icon.name}
-                onClick={() => {
-                  if (selectedIcon === icon.name) {
-                    setSelectedIcon(null)
-                  } else {
-                    setSelectedIcon(icon.name)
-                    setPreviewMode('regular')
-                    setPreviewColor('currentColor')
-                  }
-                }}
-                className={`icon-card glass-card group flex flex-col items-center gap-1.5 rounded-xl p-3 transition-all duration-200 ${
-                  selectedIcon === icon.name
-                    ? '!border-primary-400/50 dark:!border-primary-500/50 !bg-primary-500/8 dark:!bg-primary-500/10 shadow-sm shadow-primary-500/10'
-                    : ''
-                }`}
-              >
-                <IconPreview svg={getPreviewSvg(icon, previewMode)} />
-                <span className="text-[9px] font-medium text-surface-400 dark:text-surface-500 text-center leading-tight truncate w-full">
-                  {icon.name}
-                </span>
-              </button>
-            ))}
+            {visibleIcons.map(icon => {
+              const svg = svgData.get(icon.name)
+              const svgContent = svgLoaded && svg
+                ? (previewMode === 'filled' && svg.filledSvg ? svg.filledSvg : svg.regularSvg)
+                : ''
+              return (
+                <button
+                  key={icon.name}
+                  onClick={() => {
+                    if (selectedIcon === icon.name) {
+                      setSelectedIcon(null)
+                    } else {
+                      setSelectedIcon(icon.name)
+                      setPreviewMode('regular')
+                      setPreviewColor('currentColor')
+                    }
+                  }}
+                  className={`icon-card glass-card group flex flex-col items-center gap-1.5 rounded-xl p-3 transition-all duration-200 ${
+                    selectedIcon === icon.name
+                      ? '!border-primary-400/50 dark:!border-primary-500/50 !bg-primary-500/8 dark:!bg-primary-500/10 shadow-sm shadow-primary-500/10'
+                      : ''
+                  }`}
+                >
+                  {svgLoaded && svgContent ? (
+                    <IconPreview svg={svgContent} />
+                  ) : (
+                    <div className="w-6 h-6 rounded bg-surface-200 dark:bg-white/5 animate-pulse" />
+                  )}
+                  <span className="text-[9px] font-medium text-surface-400 dark:text-surface-500 text-center leading-tight truncate w-full">
+                    {icon.name}
+                  </span>
+                </button>
+              )
+            })}
           </div>
 
           {/* Infinite scroll sentinel */}

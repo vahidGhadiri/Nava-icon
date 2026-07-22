@@ -9,6 +9,12 @@ export interface Icon {
   categories: string[]
 }
 
+export interface IconMeta {
+  name: string
+  tags: string[]
+  categories: string[]
+}
+
 export function getCodeSnippet(name: string, framework: Framework, mode: IconMode = 'regular', color: string = 'currentColor'): string {
   const pascal = name
     .split(/[-_]+/)
