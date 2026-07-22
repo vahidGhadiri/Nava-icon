@@ -3,10 +3,10 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = { title: 'Installation' }
 
 const frameworks = [
-  { name: 'React', command: 'npm install @nava-icons/react', icon: '/frameworks/react.svg' },
-  { name: 'Vue', command: 'npm install @nava-icons/vue', icon: '/frameworks/vue.svg' },
-  { name: 'Angular', command: 'npm install @nava-icons/angular', icon: '/frameworks/angular.svg' },
-  { name: 'Web Components', command: 'npm install @nava-icons/web-components', icon: '/frameworks/web-components.svg' },
+  { name: 'React', command: 'npm install @whydrf/nava-icon-react', icon: '/frameworks/react.svg' },
+  { name: 'Vue', command: 'npm install @whydrf/nava-icon-vue', icon: '/frameworks/vue.svg' },
+  { name: 'Angular', command: 'npm install @whydrf/nava-icon-angular', icon: '/frameworks/angular.svg' },
+  { name: 'Web Components', command: 'npm install @whydrf/nava-icon-web-components', icon: '/frameworks/web-components.svg' },
 ]
 
 export default function Installation() {

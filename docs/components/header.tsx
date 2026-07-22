@@ -56,7 +56,7 @@ export function Header() {
 
         <div className="flex items-center gap-1">
           <a
-            href="https://github.com/vahidGhadiri/nava-icon"
+            href="https://github.com/whydrf/nava-icon"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-lg p-2 text-surface-400 hover:text-surface-900 dark:text-surface-500 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200"

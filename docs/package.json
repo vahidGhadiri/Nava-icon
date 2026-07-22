@@ -1,7 +1,7 @@
 {
   "name": "@nava-icon/docs",
   "version": "0.0.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "dev": "next --turbopack",
     "build": "next build",

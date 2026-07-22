@@ -8,12 +8,12 @@ export default function VueGuide() {
       <h1>Vue</h1>
       <h2>Installation</h2>
       <pre className="not-prose code-block">
-        <code>npm install @nava-icons/vue</code>
+        <code>npm install @whydrf/nava-icon-vue</code>
       </pre>
       <h2>Usage</h2>
       <pre className="not-prose code-block">
         <code>{`<script setup>
-import { Home, Search } from '@nava-icons/vue'
+import { Home, Search } from '@whydrf/nava-icon-vue'
 </script>
 
 <template>
@@ -25,7 +25,7 @@ import { Home, Search } from '@nava-icons/vue'
       <p>Switch between regular (stroke) and filled (solid) variants with the <code>mode</code> prop.</p>
       <pre className="not-prose code-block">
         <code>{`<script setup>
-import { CheckCircle, Home } from '@nava-icons/vue'
+import { CheckCircle, Home } from '@whydrf/nava-icon-vue'
 </script>
 
 <template>
@@ -37,7 +37,7 @@ import { CheckCircle, Home } from '@nava-icons/vue'
       <h2>Dynamic Import</h2>
       <pre className="not-prose code-block">
         <code>{`<script setup>
-import { Icon } from '@nava-icons/vue'
+import { Icon } from '@whydrf/nava-icon-vue'
 </script>
 
 <template>
