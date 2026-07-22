@@ -125,20 +125,25 @@ interface IconProps extends Omit<SVGProps<SVGSVGElement>, "width" | "height"> {
 const regularPaths = \`${regularInner}\`;
 const filledPaths = \`${filledInner}\`;
 
-export function ${componentName}({
-  size = 24,
-  color,
-  strokeWidth,
-  className,
-  style,
-  title,
-  mode = "regular",
-  ...rest
-}: IconProps) {
+export function ${componentName}(props: IconProps) {
+  const {
+    size = 24,
+    color,
+    strokeWidth,
+    className,
+    style,
+    title,
+    mode = "regular",
+    ...rest
+  } = props;
+
   const isFilled = mode === "filled" && filledPaths;
   const paths = isFilled ? filledPaths : regularPaths;
-  const strokeBased = isFilled ? ${isFilledStrokeBased} : ${isRegularStrokeBased};
-  const appliedColor = color || "currentColor";
+  const strokeBased = isFilled
+    ? ${isFilledStrokeBased}
+    : ${isRegularStrokeBased};
+
+  const appliedColor = color ?? "currentColor";
 
   return (
     <svg
@@ -148,7 +153,9 @@ export function ${componentName}({
       height={size}
       fill={strokeBased ? "none" : appliedColor}
       stroke={strokeBased ? appliedColor : "none"}
-      strokeWidth={strokeWidth || (strokeBased ? 0.5 : undefined)}
+      strokeWidth={
+        strokeWidth ?? (strokeBased ? 0.5 : undefined)
+      }
       strokeLinecap={strokeBased ? "round" : undefined}
       strokeLinejoin={strokeBased ? "round" : undefined}
       className={className}
@@ -159,9 +166,10 @@ export function ${componentName}({
       <g dangerouslySetInnerHTML={{ __html: paths }} />
     </svg>
   );
-}
-`;
-}
+}`}
+
+
+
 
 // ─── Vue Generation ─────────────────────────────────────────────────────────
 
