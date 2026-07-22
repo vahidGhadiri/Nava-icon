@@ -1,20 +1,56 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
-import type { Icon } from '@/lib/icons'
+import { useState, useEffect, memo } from 'react'
+import type { IconMeta } from '@/lib/icons'
+
+interface IconSvg {
+  name: string
+  regularSvg: string
+}
+
+const HomeIconPreview = memo(function HomeIconPreview({ svg }: { svg: string }) {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="text-surface-600 dark:text-surface-300 group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors duration-200"
+      dangerouslySetInnerHTML={{ __html: svg }}
+    />
+  )
+})
 
 export function HomeIconGrid() {
-  const [icons, setIcons] = useState<Icon[]>([])
+  const [meta, setMeta] = useState<IconMeta[]>([])
+  const [svgMap, setSvgMap] = useState<Map<string, string>>(new Map())
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    fetch('/icons-manifest.json')
+    fetch('/icons-meta.json')
       .then(r => r.json())
-      .then((data: Icon[]) => setIcons(data.slice(0, 24)))
+      .then((data: IconMeta[]) => {
+        setMeta(data.slice(0, 24))
+        setLoaded(true)
+      })
+      .catch(() => setLoaded(true))
+  }, [])
+
+  useEffect(() => {
+    fetch('/icons-svg.json')
+      .then(r => r.json())
+      .then((data: IconSvg[]) => {
+        const map = new Map<string, string>()
+        for (const item of data) {
+          map.set(item.name, item.regularSvg)
+        }
+        setSvgMap(map)
+      })
       .catch(() => {})
   }, [])
 
-  if (icons.length === 0) return null
+  if (!loaded || meta.length === 0) return null
 
   return (
     <section className="mx-auto max-w-6xl px-4 sm:px-6 py-20 sm:py-28">
@@ -25,32 +61,32 @@ export function HomeIconGrid() {
         </p>
       </div>
       <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2.5">
-        {icons.map((icon) => (
-          <Link
-            key={icon.name}
-            href={`/docs/icons#${icon.name}`}
-            className="icon-card glass-card group flex flex-col items-center gap-2 rounded-xl p-4"
-          >
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="text-surface-600 dark:text-surface-300 group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors duration-200"
-              dangerouslySetInnerHTML={{ __html: icon.regularSvg }}
-            />
-            <span className="text-[9px] font-medium text-surface-400 dark:text-surface-500 text-center leading-tight truncate w-full">
-              {icon.name}
-            </span>
-          </Link>
-        ))}
+        {meta.map((icon) => {
+          const svg = svgMap.get(icon.name)
+          return (
+            <Link
+              key={icon.name}
+              href={`/docs/icons#${icon.name}`}
+              className="icon-card glass-card group flex flex-col items-center gap-2 rounded-xl p-4"
+            >
+              {svg ? (
+                <HomeIconPreview svg={svg} />
+              ) : (
+                <div className="w-[22px] h-[22px] rounded bg-surface-200 dark:bg-white/5 animate-pulse" />
+              )}
+              <span className="text-[9px] font-medium text-surface-400 dark:text-surface-500 text-center leading-tight truncate w-full">
+                {icon.name}
+              </span>
+            </Link>
+          )
+        })}
       </div>
       <div className="mt-10 text-center">
         <Link
           href="/docs/icons"
           className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 transition-colors duration-200"
         >
-          View all {icons.length}+ icons
+          View all {meta.length}+ icons
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
