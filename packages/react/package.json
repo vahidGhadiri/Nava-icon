@@ -1,6 +1,6 @@
 {
-  "name": "@nava-icon/react",
-  "version": "0.1.0",
+  "name": "@whydrf/nava-icon-react",
+  "version": "1.0.0",
   "type": "module",
   "sideEffects": false,
   "description": "React components for Nava Icons",
@@ -30,14 +30,17 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
     "dev": "tsup --config ../../tsup.config.ts --watch",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
   },
-
   "peerDependencies": {
     "react": ">=18"
   },
@@ -47,10 +50,16 @@
     "tsup": "^8.0.0",
     "typescript": "^5.7.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nava-icon/nava-icon",
+    "url": "https://github.com/vahidGhadiri/Nava-icon",
     "directory": "packages/react"
   }
 }

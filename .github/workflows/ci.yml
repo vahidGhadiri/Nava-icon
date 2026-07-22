@@ -130,7 +130,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      id-token: write
 
     environment:
       name: PRODUCTION
@@ -160,14 +159,12 @@ jobs:
 
       - name: Create Release PR or Publish
         uses: changesets/action@v1
-
         with:
           title: "chore: version packages"
           commit: "chore: version packages"
           version: pnpm changeset version
           publish: pnpm publish:ci
           createGithubReleases: true
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

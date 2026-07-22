@@ -9,14 +9,14 @@ export default function UsingIcons() {
       <h2>Static Imports (Recommended)</h2>
       <p>Import individual icons for tree shaking support. Only the icons you import are included in your bundle.</p>
       <pre className="not-prose code-block">
-        <code>{`import { Home, Search } from '@nava-icons/react'
+        <code>{`import { Home, Search } from '@whydrf/nava-icon-react'
 <Home size={24} />
 <Search color="gray" />`}</code>
       </pre>
       <h2>Switching Mode</h2>
       <p>Every icon supports a <code>mode</code> prop to switch between regular (stroke) and filled (solid) variants.</p>
       <pre className="not-prose code-block">
-        <code>{`import { CheckCircle, Home } from '@nava-icons/react'
+        <code>{`import { CheckCircle, Home } from '@whydrf/nava-icon-react'
 <CheckCircle mode="regular" />  {/* stroke outline */}
 <CheckCircle mode="filled" />   {/* solid fill */}
 <Home mode="filled" color="blue" />`}</code>
@@ -24,7 +24,7 @@ export default function UsingIcons() {
       <h2>Dynamic Runtime API</h2>
       <p>Use the <code>Icon</code> component when icon names are determined at runtime.</p>
       <pre className="not-prose code-block">
-        <code>{`import { Icon } from '@nava-icons/react'
+        <code>{`import { Icon } from '@whydrf/nava-icon-react'
 <Icon name="home" size={24} />
 <Icon name={dynamicName} size={24} mode="filled" />`}</code>
       </pre>

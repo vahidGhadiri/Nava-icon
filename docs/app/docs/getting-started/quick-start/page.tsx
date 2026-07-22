@@ -8,11 +8,11 @@ export default function QuickStart() {
       <h1>Quick Start</h1>
       <h2>1. Install</h2>
       <pre className="not-prose code-block">
-        <code>npm install @nava-icons/react</code>
+        <code>npm install @whydrf/nava-icon-react</code>
       </pre>
       <h2>2. Import &amp; Use</h2>
       <pre className="not-prose code-block">
-        <code>{`import { Home, Search, Add } from '@nava-icons/react'
+        <code>{`import { Home, Search, Add } from '@whydrf/nava-icon-react'
 
 function App() {
   return (
