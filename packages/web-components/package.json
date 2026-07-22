@@ -1,10 +1,6 @@
 {
   "name": "@whydrf/nava-icon-web-components",
-<<<<<<< Updated upstream
-  "version": "0.1.0",
-=======
   "version": "1.0.1",
->>>>>>> Stashed changes
   "type": "module",
   "sideEffects": [
     "./dist/icons/*.js"
