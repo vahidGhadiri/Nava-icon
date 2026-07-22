@@ -159,17 +159,14 @@ jobs:
 
       - name: Create Release PR or Publish
         uses: changesets/action@v1
-
         with:
           title: "chore: version packages"
           commit: "chore: version packages"
           version: pnpm changeset version
           publish: pnpm publish:ci
           createGithubReleases: true
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   docker-publish:

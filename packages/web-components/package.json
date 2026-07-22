@@ -1,8 +1,10 @@
 {
-  "name": "@nava-icon/web-components",
+  "name": "@whydrf/nava-icon-web-components",
   "version": "0.1.0",
   "type": "module",
-  "sideEffects": ["./dist/icons/*.js"],
+  "sideEffects": [
+    "./dist/icons/*.js"
+  ],
   "description": "Web Components for Nava Icons",
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
@@ -20,7 +22,11 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
     "dev": "tsup --config ../../tsup.config.ts --watch",
@@ -31,10 +37,16 @@
     "tsup": "^8.0.0",
     "typescript": "^5.7.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nava-icon/nava-icon",
+    "url": "https://github.com/vahidGhadiri/Nava-icon",
     "directory": "packages/web-components"
   }
 }

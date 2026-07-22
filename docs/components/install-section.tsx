@@ -5,7 +5,7 @@ import { useState } from 'react'
 const frameworks = [
   {
     name: 'React',
-    packageName: '@nava-icons/react',
+    packageName: '@whydrf/nava-icon-react',
     icon: '/frameworks/react.svg',
     color: 'text-blue-500 dark:text-blue-400',
     bg: 'bg-blue-500/8 dark:bg-blue-500/10',
@@ -13,7 +13,7 @@ const frameworks = [
   },
   {
     name: 'Vue',
-    packageName: '@nava-icons/vue',
+    packageName: '@whydrf/nava-icon-vue',
     icon: '/frameworks/vue.svg',
     color: 'text-emerald-500 dark:text-emerald-400',
     bg: 'bg-emerald-500/8 dark:bg-emerald-500/10',
@@ -21,7 +21,7 @@ const frameworks = [
   },
   {
     name: 'Angular',
-    packageName: '@nava-icons/angular',
+    packageName: '@whydrf/nava-icon-angular',
     icon: '/frameworks/angular.svg',
     color: 'text-red-500 dark:text-red-400',
     bg: 'bg-red-500/8 dark:bg-red-500/10',
@@ -29,7 +29,7 @@ const frameworks = [
   },
   {
     name: 'Web Components',
-    packageName: '@nava-icons/web-components',
+    packageName: '@whydrf/nava-icon-web-components',
     icon: '/frameworks/web-components.svg',
     color: 'text-violet-500 dark:text-violet-400',
     bg: 'bg-violet-500/8 dark:bg-violet-500/10',

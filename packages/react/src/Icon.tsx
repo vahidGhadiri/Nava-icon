@@ -41,7 +41,7 @@ function normalizeIconName(name: string): string {
  *
  * **Tree-shaking limitation**: This component imports ALL icons,
  * so it cannot be tree-shaken. For production builds, prefer
- * direct imports: `import { HomeIcon } from "@nava-icons/react"`
+ * direct imports: `import { HomeIcon } from "@whydrf/nava-icon-react"`
  */
 export const Icon = forwardRef<SVGSVGElement, IconProps>(
   ({ name, size, color, strokeWidth, className, title, style, mode, ...props }, ref) => {

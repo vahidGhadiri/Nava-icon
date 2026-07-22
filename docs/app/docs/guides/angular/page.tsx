@@ -8,11 +8,11 @@ export default function AngularGuide() {
       <h1>Angular</h1>
       <h2>Installation</h2>
       <pre className="not-prose code-block">
-        <code>npm install @nava-icons/angular</code>
+        <code>npm install @whydrf/nava-icon-angular</code>
       </pre>
       <h2>Setup</h2>
       <pre className="not-prose code-block">
-        <code>{`import { NavaIconsModule } from '@nava-icons/angular'
+        <code>{`import { NavaIconsModule } from '@whydrf/nava-icon-angular'
 @NgModule({
   imports: [NavaIconsModule],
 })
