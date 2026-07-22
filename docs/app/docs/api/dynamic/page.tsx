@@ -11,13 +11,13 @@ export default function DynamicAPI() {
       </p>
       <h2>React</h2>
       <pre className="not-prose code-block">
-        <code>{`import { Icon } from '@nava-icon/react'
+        <code>{`import { Icon } from '@whydrf/nava-icon-react'
 <Icon name="home" size={24} color="blue" />`}</code>
       </pre>
       <h2>Vue</h2>
       <pre className="not-prose code-block">
         <code>{`<script setup>
-import { Icon } from '@nava-icon/vue'
+import { Icon } from '@whydrf/nava-icon-vue'
 </script>
 
 <template>

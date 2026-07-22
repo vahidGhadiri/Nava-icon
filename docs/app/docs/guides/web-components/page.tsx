@@ -8,11 +8,11 @@ export default function WebComponentsGuide() {
       <h1>Web Components</h1>
       <h2>Installation</h2>
       <pre className="not-prose code-block">
-        <code>npm install @nava-icons/web-components</code>
+        <code>npm install @whydrf/nava-icon-web-components</code>
       </pre>
       <h2>Usage</h2>
       <pre className="not-prose code-block">
-        <code>{`<script type="module" src="@nava-icons/web-components"></script>
+        <code>{`<script type="module" src="@whydrf/nava-icon-web-components"></script>
 <nava-icon name="home"></nava-icon>
 <nava-icon name="search" size="24" color="gray"></nava-icon>`}</code>
       </pre>

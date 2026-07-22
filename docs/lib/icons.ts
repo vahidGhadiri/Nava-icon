@@ -26,12 +26,12 @@ export function getCodeSnippet(name: string, framework: Framework, mode: IconMod
 
   switch (framework) {
     case 'react':
-      return `import { ${pascal}Icon } from '@nava-icons/react'\n\n<${pascal}Icon size={24} color={${colorAttr}}${modeAttr} />`
+      return `import { ${pascal}Icon } from '@whydrf/nava-icon-react'\n\n<${pascal}Icon size={24} color={${colorAttr}}${modeAttr} />`
     case 'vue':
-      return `<script setup>\nimport { ${pascal}Icon } from '@nava-icons/vue'\n</script>\n\n<${pascal}Icon :size="24" color="${color}"${modeAttr} />`
+      return `<script setup>\nimport { ${pascal}Icon } from '@whydrf/nava-icon-vue'\n</script>\n\n<${pascal}Icon :size="24" color="${color}"${modeAttr} />`
     case 'angular':
-      return `// In your module:\nimport { ${pascal}IconComponent } from '@nava-icons/angular'\n\n// In your template:\n<icon-${name} [size]="24" color="${color}"${modeAttr}></icon-${name}>`
+      return `// In your module:\nimport { ${pascal}IconComponent } from '@whydrf/nava-icon-angular'\n\n// In your template:\n<icon-${name} [size]="24" color="${color}"${modeAttr}></icon-${name}>`
     case 'web-components':
-      return `<script type="module" src="@nava-icons/web-components"></script>\n\n<icon-${name} size="24" color="${color}"${modeAttr}></icon-${name}>`
+      return `<script type="module" src="@whydrf/nava-icon-web-components"></script>\n\n<icon-${name} size="24" color="${color}"${modeAttr}></icon-${name}>`
   }
 }

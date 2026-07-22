@@ -12,8 +12,8 @@ export default function APIReference() {
       <h2>Static API (Recommended)</h2>
       <p>Import individual icon components directly. Supports full tree shaking.</p>
       <pre className="not-prose code-block">
-        <code>{`import { Home, CheckCircle } from '@nava-icons/react'
-import type { IconName, IconMode } from '@nava-icons/react'
+        <code>{`import { Home, CheckCircle } from '@whydrf/nava-icon-react'
+import type { IconName, IconMode } from '@whydrf/nava-icon-react'
 
 <Home size={24} />
 <CheckCircle mode="filled" color="green" />`}</code>
@@ -21,7 +21,7 @@ import type { IconName, IconMode } from '@nava-icons/react'
       <h2>Dynamic API</h2>
       <p>Use the <code>&lt;Icon&gt;</code> component for runtime icon selection.</p>
       <pre className="not-prose code-block">
-        <code>{`import { Icon } from '@nava-icons/react'
+        <code>{`import { Icon } from '@whydrf/nava-icon-react'
 <Icon name="home" size={24} />
 <Icon name="check-circle" mode="filled" />`}</code>
       </pre>
@@ -50,10 +50,10 @@ import type { IconName, IconMode } from '@nava-icons/react'
             </tr>
           </thead>
           <tbody className="text-surface-500 dark:text-surface-400">
-            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">@nava-icons/react</td><td className="py-2.5 font-mono text-[12px]">React components</td></tr>
-            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">@nava-icons/vue</td><td className="py-2.5 font-mono text-[12px]">Vue components</td></tr>
-            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">@nava-icons/angular</td><td className="py-2.5 font-mono text-[12px]">Angular components</td></tr>
-            <tr><td className="py-2.5">@nava-icons/web-components</td><td className="py-2.5 font-mono text-[12px]">Custom elements</td></tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">@whydrf/nava-icon-react</td><td className="py-2.5 font-mono text-[12px]">React components</td></tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">@whydrf/nava-icon-vue</td><td className="py-2.5 font-mono text-[12px]">Vue components</td></tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">@whydrf/nava-icon-angular</td><td className="py-2.5 font-mono text-[12px]">Angular components</td></tr>
+            <tr><td className="py-2.5">@whydrf/nava-icon-web-components</td><td className="py-2.5 font-mono text-[12px]">Custom elements</td></tr>
           </tbody>
         </table>
       </div>
