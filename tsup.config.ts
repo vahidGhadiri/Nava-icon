@@ -51,7 +51,9 @@ function getEntries(): Record<string, string> | string[] {
 export default defineConfig({
   entry: getEntries(),
   format: pkg.format,
-  dts: true,
+  dts: {
+    resolve: true
+  },
   outDir: "dist",
   clean: true,
   external: pkg.external,
