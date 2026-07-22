@@ -1,21 +1,25 @@
 {
   "name": "@whydrf/nava-icon-angular",
+<<<<<<< Updated upstream
   "version": "0.1.0",
+=======
+  "version": "1.0.1",
+>>>>>>> Stashed changes
   "type": "module",
   "sideEffects": false,
   "description": "Angular components for Nava Icons",
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
     "./icons": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
     "./package.json": "./package.json"
