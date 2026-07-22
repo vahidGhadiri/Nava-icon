@@ -1,24 +1,21 @@
 {
   "name": "@whydrf/nava-icon-web-components",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "sideEffects": [
     "./dist/icons/*.js"
   ],
   "description": "Web Components for Nava Icons",
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.js"
     },
     "./icons": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
