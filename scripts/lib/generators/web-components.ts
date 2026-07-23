@@ -45,7 +45,7 @@ export function generateWebComponent(icon: ParsedIcon): string {
     const strokeWidth = this.getAttribute("stroke-width") || "0.5";
     const mode = this.getAttribute("mode") || "regular";
     const isFilled = mode === "filled";
-    const paths = isFilled && "${filled}" ? "${filled}" : "${regular}";
+    const paths = isFilled ? \`${filled}\` : \`${regular}\`;
     const strokeBased = isFilled ? ${filledStrokeBased} : ${regularStrokeBased};
 
     this.shadowRoot!.innerHTML = \`
