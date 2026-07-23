@@ -112,14 +112,16 @@ function generateReactComponent(icon: IconEntry): string {
   const isRegularStrokeBased = regularSvg?.strokeBased ?? false;
   const isFilledStrokeBased = filledSvg?.strokeBased ?? false;
 
-  return `import type { SVGProps } from "react";
+  return `import type { CSSProperties } from "react";
 
-interface IconProps extends Omit<SVGProps<SVGSVGElement>, "width" | "height"> {
+interface IconProps {
   size?: number | string;
   color?: string;
   strokeWidth?: number | string;
   title?: string;
   mode?: "regular" | "filled";
+  className?: string;
+  style?: CSSProperties;
 }
 
 const regularPaths = \`${regularInner}\`;
@@ -134,7 +136,6 @@ export function ${componentName}(props: IconProps) {
     style,
     title,
     mode = "regular",
-    ...rest
   } = props;
 
   const isFilled = mode === "filled" && filledPaths;
@@ -160,7 +161,6 @@ export function ${componentName}(props: IconProps) {
       strokeLinejoin={strokeBased ? "round" : undefined}
       className={className}
       style={style}
-      {...rest}
     >
       {title && <title>{title}</title>}
       <g dangerouslySetInnerHTML={{ __html: paths }} />
@@ -203,7 +203,7 @@ export const ${componentName} = defineComponent({
     title: { type: String },
     mode: { type: String as PropType<"regular" | "filled">, default: "regular" },
   },
-  setup(props, { attrs }) {
+  setup(props) {
     return () => {
       const isFilled = props.mode === "filled" && filledPaths;
       const paths = isFilled ? filledPaths : regularPaths;
@@ -225,7 +225,6 @@ export const ${componentName} = defineComponent({
           class: props.className,
           style: props.style,
           innerHTML: paths,
-          ...attrs,
         },
         [props.title ? h("title", props.title) : null]
       );
@@ -281,6 +280,7 @@ export class ${componentName}Component {
   @Input() size: number | string = 24;
   @Input() color: string = "currentColor";
   @Input() strokeWidth: number | string = 0.5;
+  @Input() title: string | null = null;
   @Input() mode: "regular" | "filled" = "regular";
 
   get isFilled(): boolean {
@@ -425,6 +425,15 @@ function generateWebComponentsIndex(icons: IconEntry[]): string {
     .join("\n") + "\n";
 }
 
+function generateIconNameTypes(icons: IconEntry[]): string {
+  const sortedNames = icons.map((icon) => icon.name).sort((a, b) => a.localeCompare(b));
+  return `export type IconName =
+${sortedNames.map((name) => `  | "${name}"`).join("\n")};
+
+export type IconMode = "regular" | "filled";
+`;
+}
+
 // ─── Main Generation ────────────────────────────────────────────────────────
 
 function generateDocsManifests(icons: IconEntry[]): { meta: string; svg: string } {
@@ -483,6 +492,10 @@ function main() {
   writeFileSync(join(vueIconsDir, "index.ts"), generateVueIndex(icons));
   writeFileSync(join(angularIconsDir, "index.ts"), generateAngularIndex(icons));
   writeFileSync(join(wcIconsDir, "index.ts"), generateWebComponentsIndex(icons));
+
+  writeFileSync(join(PACKAGES_DIR, "react", "src", "types.ts"), generateIconNameTypes(icons));
+  writeFileSync(join(PACKAGES_DIR, "vue", "src", "types.ts"), generateIconNameTypes(icons));
+  writeFileSync(join(PACKAGES_DIR, "angular", "src", "types.ts"), generateIconNameTypes(icons));
 
   const docsPublicDir = join(ROOT, "docs", "public");
   mkdirSync(docsPublicDir, { recursive: true });

@@ -9,8 +9,8 @@
   "packageManager": "pnpm@9.15.4",
   "scripts": {
     "generate": "tsx scripts/generate.ts",
-    "build": "turbo run build",
-    "build:packages": "turbo run build --filter='./packages/*'",
+    "build": "turbo run build --output-logs=none --log-prefix=none",
+    "build:packages": "turbo run build --filter='./packages/*' --output-logs=none --log-prefix=none",
     "build:docs": "turbo run build --filter='@nava-icon/docs'",
     "dev": "pnpm --filter @nava-icon/docs dev",
     "validate": "turbo run validate",

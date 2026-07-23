@@ -25,7 +25,7 @@ function normalizeIconName(name: string): string {
   `,
 })
 export class IconComponent {
-  @Input() name: IconName | string = "";
+  @Input() name!: IconName;
   @Input() size: number | string = 24;
   @Input() color: string = "currentColor";
   @Input() strokeWidth: number | string = 0.5;

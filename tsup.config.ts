@@ -57,4 +57,5 @@ export default defineConfig({
   outDir: "dist",
   clean: true,
   external: pkg.external,
+  silent: true,
 });
