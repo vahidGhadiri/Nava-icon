@@ -16,19 +16,22 @@ if (!pkg) throw new Error(`No tsup config found for package: ${pkgName}`);
 
 const iconsDir = join(process.cwd(), "src", "icons");
 
+function getIconFiles(): string[] {
+  if (!existsSync(iconsDir)) return [];
+  return readdirSync(iconsDir).filter((f) => f.endsWith(pkg.ext));
+}
+
 function getEntries(): Record<string, string> | string[] {
+  const iconFiles = getIconFiles();
+
   if (pkgName === "react") {
-    const files = existsSync(iconsDir)
-      ? readdirSync(iconsDir).filter((f) => f.endsWith(pkg.ext)).map((f) => join(iconsDir, f))
-      : [];
-    return ["src/index.ts", "src/Icon.tsx", "src/types.ts", ...files];
+    const iconPaths = iconFiles.map((f) => join(iconsDir, f));
+    return ["src/index.ts", "src/Icon.tsx", "src/types.ts", ...iconPaths];
   }
 
   if (pkgName === "vue") {
-    const files = existsSync(iconsDir)
-      ? readdirSync(iconsDir).filter((f) => f.endsWith(pkg.ext)).map((f) => join(iconsDir, f))
-      : [];
-    return ["src/index.ts", "src/Icon.ts", "src/types.ts", ...files];
+    const iconPaths = iconFiles.map((f) => join(iconsDir, f));
+    return ["src/index.ts", "src/Icon.ts", "src/types.ts", ...iconPaths];
   }
 
   const entries: Record<string, string> = { index: "src/index.ts" };
@@ -37,12 +40,9 @@ function getEntries(): Record<string, string> | string[] {
     entries["icon-base"] = "src/icon-base.ts";
   }
 
-  if (existsSync(iconsDir)) {
-    const files = readdirSync(iconsDir).filter((f) => f.endsWith(pkg.ext));
-    for (const file of files) {
-      const name = file.replace(pkg.ext === ".component.ts" ? /\.component\.ts$/ : /\.ts$/, "");
-      entries[`icons/${name}`] = join(iconsDir, file);
-    }
+  for (const file of iconFiles) {
+    const name = file.replace(pkg.ext === ".component.ts" ? /\.component\.ts$/ : /\.ts$/, "");
+    entries[`icons/${name}`] = join(iconsDir, file);
   }
 
   return entries;
@@ -57,4 +57,5 @@ export default defineConfig({
   outDir: "dist",
   clean: true,
   external: pkg.external,
+  silent: true,
 });

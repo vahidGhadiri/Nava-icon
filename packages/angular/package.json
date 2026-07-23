@@ -1,6 +1,6 @@
 {
   "name": "@whydrf/nava-icon-angular",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "sideEffects": false,
   "description": "Angular components for Nava Icons",

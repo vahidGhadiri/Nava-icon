@@ -2,14 +2,14 @@ import {
   forwardRef,
   createElement,
   type ComponentType,
-  type SVGProps,
+  type CSSProperties,
 } from "react";
 import type { IconName } from "./types.js";
 import * as iconModules from "./icons/index.js";
 
-export interface IconProps extends Omit<SVGProps<SVGSVGElement>, "width" | "height"> {
+export interface IconProps {
   /** Icon name in PascalCase (e.g., "HomeIcon") or kebab-case (e.g., "home") */
-  name: IconName | string;
+  name: IconName;
   /** Width and height in pixels */
   size?: number | string;
   /** SVG stroke/fill color */
@@ -20,6 +20,10 @@ export interface IconProps extends Omit<SVGProps<SVGSVGElement>, "width" | "heig
   title?: string;
   /** Icon mode: "regular" (stroke) or "filled" (solid) */
   mode?: "regular" | "filled";
+  /** Additional CSS class name */
+  className?: string;
+  /** Inline style object */
+  style?: CSSProperties;
 }
 
 const iconRecord = iconModules as unknown as Record<string, ComponentType<Record<string, unknown>>>;

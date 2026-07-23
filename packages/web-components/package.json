@@ -1,6 +1,6 @@
 {
   "name": "@whydrf/nava-icon-web-components",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "sideEffects": [
     "./dist/icons/*.js"

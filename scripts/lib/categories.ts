@@ -1,0 +1,89 @@
+const CATEGORY_RULES: Array<[string, RegExp]> = [
+  [
+    "arrows",
+    /^(arrow|chevron|caret|direction|left-|right-|up-|down-|navigate|skip-|first-page|last-page|back|forward|horizontal|vertical|subdirectory|to-top|expand|collapse|eject|exit|enter|log-in|log-out)/,
+  ],
+  [
+    "interface",
+    /^(align|border|grid|layout|list|menu|sidebar|toggle|checkbox|radio|select|dock|column|row|tab|panel|drag|drop|resize|move|order|swap|transfer|merge|split|unite|intersect|exclude|rotate|refresh|reset|redo|undo|repeat|sync|reload|block|copy|paste|cut|duplicate|clone|link|unlink|attach|detach|dots|sort|sort-a-z|sort-z-a|sort-alt|sort-down|sort-up|plus|minus|x-circle|x-square|check|check-circle|check-double|check-square|add-to-queue|minus-circle|minus-square|plus-circle|plus-square|minus-back|minus-front|plus-medical|no-signal|power-off|battery|battery-charging|battery-full|battery-low|wifi|wifi-0|wifi-1|wifi-2|wifi-off|bluetooth|signal|scan|search|search-alt|search-alt-2|zoom-in|zoom-out|rename|detail|collection|objects-horizontal|objects-vertical|adjust|adjust-alt|braille|cog|dialpad|dialpad-alt|downvote|upvote|filter|filter-alt|flag|flag-alt|flag-checkered|fullscreen|hide|infinite|loader|loader-alt|loader-circle|recycle|reflect-horizontal|reflect-vertical|repost|rfid|shuffle|slider|slider-alt|target-lock|task|task-x|trash|trash-alt|trim|upside-down|widget|x|reflection)/,
+  ],
+  [
+    "files",
+    /^(file|folder|archive|clipboard|save|download|upload|export|import|print|document|note|notepad|spreadsheet|book|bookmark|page|paper|receipt|library|news|paragraph|heading|quote|quote-alt|quote-left|quote-right|quote-single|certification)/,
+  ],
+  [
+    "communication",
+    /^(message|comment|chat|envelope|mail|bell|phone|call|inbox|notification|send|share|reply|forward|broadcast|volume|microphone|headphone|speaker|radio|rss|podcast|link|at|conversation|megaphone|tune|captions|alarm|bell-minus|bell-plus|bell-ring|bell-off|voicemail)/,
+  ],
+  [
+    "media",
+    /^(image|video|camera|music|film|movie|play|pause|stop|skip|rewind|fast-forward|record|slideshow|photo|gallery|palette|brush|paint|draw|crop|edit|pen|pencil|eraser|font|text|bold|italic|underline|strikethrough|highlight|color|droplet|eyedropper|spray-can|wand|album|cast|microchip|disc|note|lyrics|tv|desktop|laptop|mobile|tablet|device|monitor|screen|display|aperture|photograph|clapperboard|webcam|camera-home|camera-movie|camera-off|camera-plus)/,
+  ],
+  [
+    "data",
+    /^(bar-chart|pie-chart|line-chart|scatter-chart|doughnut-chart|chart|graph|stats|data|equalizer|trending|analytics|report|network-chart|signal|analyse|area|measure|calculate|spreadsheet|database|table|index|catalog|directory|register|record|log|tachometer|dashboard|gauge|meter|poll|survey|questionnaire|census|assessment|evaluation|review|audit|inspection|examination|analysis|research|study|investigation|experiment|test|trial|sample)/,
+  ],
+  [
+    "weather",
+    /^(cloud|sun|moon|rain|snow|wind|weather|storm|thunder|lightning|temperature|thermometer|droplet|umbrella|flame|fire|smoke|fog|haze|rainbow)/,
+  ],
+  [
+    "transport",
+    /^(car|bus|train|plane|truck|taxi|bicycle|cycling|walk|run|swim|navigation|compass|map|pin|location|directions|traffic|road|fuel|gas|ev-station|parking|metro|subway|helicopter|boat|ship|ferry|yacht|sail|anchor|raft|kayak|canoe|surf|skate|ski|cable-car|gondola|cable|lift|current-location|street-view|trip|travel|route|journey|destination|waypoint)/,
+  ],
+  [
+    "shopping",
+    /^(cart|shopping|purchase|tag|price|dollar|money|credit-card|wallet|coin|coupon|discount|offer|sale|store|bag|basket|receipt|barcode|qr|payment|bitcoin|ruble|rupee|euro|yen|won|lira|pound|badge|shop|market|bazaar|invoice|bill|cost|fee|charge|tax|donate|donate-blood|donate-heart|shekel)/,
+  ],
+  [
+    "security",
+    /^(lock|unlock|shield|key|password|security|check-shield|no-entry|access|keyhole|safe|vault|guard|protect|defend|encrypt|cctv|fingerprint)/,
+  ],
+  [
+    "medical",
+    /^(health|medical|heart|pill|hospital|ambulance|syringe|dna|virus|vaccination|clinic|doctor|nurse|pulse|band-aid|first-aid|brain|body|bone|tooth|eye|ear|mask|test-tube|radiation|vial|flask|handicap|universal-access|capsule|injection|low-vision|water|droplet-half)/,
+  ],
+  [
+    "shapes",
+    /^(circle|square|triangle|rectangle|polygon|cube|cuboid|diamond|sphere|cylinder|pyramid|prism|star|cross|ring|shape|outline|layer|vector|yin-yang)/,
+  ],
+  [
+    "code",
+    /^(code|terminal|bug|database|server|git|component|extension|plug|api|bracket|hash|command|code-block|code-alt|code-curly|sitemap|chip|hdd|memory-card|usb|device|hardware|invader)/,
+  ],
+  [
+    "time",
+    /^(time|clock|timer|stopwatch|alarm|hourglass|schedule|calendar|date|day|month|year|history|revision|trend|past|present|future|deadline|duration|interval|period|frequency|rate|pace|speed|velocity|tempo|rhythm|cycle|rotation|revolution|orbit|spin|twist|turn)/,
+  ],
+  [
+    "people",
+    /^(user|account|person|people|group|friend|family|male|female|child|baby|baby-carriage|id-card|badge|crown|royal|hand|like|dislike|happy|sad|angry|surprised|confused|sleepy|cool|face|emotion|emoji|smile|laugh|meh|dizzy|hot|cold|tired|shocked|wink|tongue|heart-eyes|beaming|ghost|skull|skull-crossbones|t-shirt|briefcase|contact|graduation|spa|fist|thumb|palm|point|wave|clap|snap|hold|grip|pinch|squeeze|stroke|rub|pat|tap|knock|scratch|bite|kiss|lick|blow|whistle|scream|shout|whisper|mumble|stutter|stammer|groan|moan|sigh|yawn|sneeze|cough|hiccup|burp|fart|poo|pee|sweat|bleed|cry|weep|sob|wail|howl|shriek|yell|bellow|roar|growl|hiss|snarl|bark|meow|moo|baa|oink|neigh|cluck|quack|honk|chirp|tweet|sing|hum|buzz|click|clack|clatter|rattle|rustle|swish|swoosh|whoosh|whiz|zoom|zip|zap|bang|boom|crash|smash|shatter|crack|snap|pop|pow|bam|wham|thwack|thud|thump|bump|clunk|clank|clang|ding|dong|bell|buzzer|siren|horn|beep|blip|boop|bop|bip|bap|bing|bong|dang|dung)/,
+  ],
+  [
+    "building",
+    /^(home|house|building|apartment|hotel|office|factory|warehouse|school|university|church|temple|mosque|landmark|city|town|globe|world|landscape|mountain|tree|flower|nature|park|garden|castle|arch|bridge|tower|monument|statue|fountain|gate|door|window|wall|roof|floor|ceiling|column|pillar|beam|foundation|basement|attic|garage|porch|balcony|terrace|patio|courtyard|yard|lawn|field|meadow|pasture|forest|woods|jungle|desert|oasis|island|beach|shore|coast|river|lake|pond|stream|creek|waterfall|spring|well|reservoir|dam|canal|channel|strait|bay|gulf|harbor|port|dock|pier|wharf|marina|anchorage|mooring|berth|slip|drydock|shipyard|boatyard|terminal|station|stop|depot|hub|center|complex|plaza|square|court|arena|stadium|auditorium|theater|cinema|concert|hall|gallery|museum|exhibition|showroom|display|showcase|exhibit|hive|bank|institution)/,
+  ],
+  [
+    "objects",
+    /^(gift|party|balloon|confetti|celebration|trophy|medal|award|prize|champion|game|dice|puzzle|joystick|ball|sport|bowling|tennis|football|baseball|basketball|chess|casino|abacus|calculator|binoculars|blanket|bowl|cabinet|candle|chair|clock|coin|cup|mug|bottle|glass|jar|jug|kettle|knife|fork|spoon|plate|dish|pan|pot|oven|microwave|toaster|blender|mixer|grinder|juicer|food|meal|pizza|sushi|lemon|pear|popsicle|cricket-ball|dumbbell|fridge|dryer|washer|piano|guitar-amp|magic-wand|magnet|ruler|torch|towel|cushion|pillow|sheet|curtain|blind|shade|rug|carpet|mat|throw|quilt|comforter|duvet|bedspread|coverlet|afghan|shawl|wrap|cape|cloak|poncho|vest|jacket|coat|parka|anorak|windbreaker|raincoat|trench|overcoat|peacoat|duffle|duffel|rain|snow|ski|winter|summer|fall|autumn|season|climate|forecast|warning|alert|advisory|watch|emergency|disaster|crisis|accident|incident|event|occurrence|happening|phenomenon|miracle|wonder|marvel|spectacle|demonstration|presentation|performance|recital|play|drama|comedy|tragedy|musical|opera|ballet|dance|festival|fair|carnival|fete|bash|shindig|hootenanny|jamboree|blowout|rager|hurl|binge|bender|spree|fling|flirt|romance|love|affair|liaison|tryst|rendezvous|date|appointment|meeting|conference|convention|summit|symposium|colloquium|seminar|workshop|clinic|class|course|lecture|tutorial|lesson|session|lab|studio|atelier|garage|shed|barn|coop|pen|cage|stable|stall|kennel|litter|box|crate|basket|bin|tub|bucket|pail|can|tin|tumbler|goblet|chalice|stein|bath|bed|bible|bomb|bullseye|buoy|cake|chalkboard|cheese|closet|coffee|coffee-alt|coffee-bean|coffee-togo|cookie|drink|florist|hard-hat|leaf|package|restaurant|sticker|wine)/,
+  ],
+  [
+    "tools",
+    /^(tool|wrench|screwdriver|hammer|drill|saw|nut|bolt|gear|setting|option|configure|customize|support|help|info|question|alert|warning|error|danger|exclamation|brightness|contrast|bulb|flask|ruler|math|robot|bot|radar|tone)/,
+  ],
+  [
+    "space",
+    /^(rocket|satellite|space|planet|star|galaxy|ufo|alien|meteor|orbit|launch|gravity)/,
+  ],
+  [
+    "animals",
+    /^(fish|dog|cat|bird|horse|cow|pig|sheep|goat|chicken|rabbit|mouse|bug|insect|butterfly|bee|ant|spider|snake|turtle|dolphin|whale|shark|octopus|crab|snail|owl|eagle|parrot|crow|flamingo|penguin)/,
+  ],
+];
+
+export function getCategory(iconName: string): string {
+  const lowerName = iconName.toLowerCase();
+  return (
+    CATEGORY_RULES.find(([, regex]) => regex.test(lowerName))?.[0] ?? "other"
+  );
+}

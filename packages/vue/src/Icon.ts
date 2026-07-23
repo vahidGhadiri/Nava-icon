@@ -18,7 +18,7 @@ export default defineComponent({
   name: "NavaIcon",
   props: {
     name: {
-      type: String as PropType<IconName | string>,
+      type: String as PropType<IconName>,
       required: true,
     },
     size: {
