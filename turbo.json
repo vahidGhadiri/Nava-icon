@@ -4,8 +4,8 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["src/**"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+      "inputs": ["src/**", "app/**", "components/**", "lib/**"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**", "out/**"]
     },
     "dev": {
       "dependsOn": ["^build"],
