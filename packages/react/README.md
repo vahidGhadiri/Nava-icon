@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@whydrf/nava-icon-react"><img src="https://img.shields.io/npm/v/@whydrf/nava-icon-react?style=flat-square&color=blue" alt="npm version"></a>
-  <a href="https://github.com/whydrf/nava-icon/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@whydrf/nava-icon-react?style=flat-square" alt="license"></a>
+  <a href="https://github.com/vahidGhadiri/nava-icon/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@whydrf/nava-icon-react?style=flat-square" alt="license"></a>
   <a href="https://www.npmjs.com/package/@whydrf/nava-icon-react"><img src="https://img.shields.io/npm/dm/@whydrf/nava-icon-react?style=flat-square&color=blue" alt="npm downloads"></a>
 </p>
 
@@ -18,7 +18,7 @@
 
 ## What is this?
 
-`@whydrf/nava-icon-react` is the React binding for [Nava Icons](https://github.com/whydrf/nava-icon) — a collection of 950+ handcrafted SVG icons. Each icon is a native React component with full TypeScript support, tree shaking, and two visual variants (regular outlines and filled shapes).
+`@whydrf/nava-icon-react` is the React binding for [Nava Icons](https://vahidghadiri.github.io/Nava-icon/) — a collection of 950+ handcrafted SVG icons. Each icon is a native React component with full TypeScript support, tree shaking, and two visual variants (regular outlines and filled shapes).
 
 Unlike icon fonts or SVG sprites, every icon here is a proper React component. You import it, use it with JSX props, and your bundler eliminates anything you didn't import.
 
@@ -262,4 +262,4 @@ Nava Icons strikes a balance between quantity and quality — every icon is desi
 
 ## License
 
-[MIT](https://github.com/whydrf/nava-icon/blob/main/LICENSE) &copy; [whydrf](https://github.com/whydrf)
+[MIT](https://github.com/vahidGhadiri/nava-icon/blob/main/LICENSE) &copy; [whydrf](https://github.com/whydrf)
