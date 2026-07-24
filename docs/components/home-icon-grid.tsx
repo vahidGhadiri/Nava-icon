@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect, memo } from 'react'
 import type { IconMeta } from '@/lib/icons'
+import { BASE_PATH } from '@/lib/config'
 
 interface IconSvg {
   name: string
@@ -28,7 +29,7 @@ export function HomeIconGrid() {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    fetch('/icons-meta.json')
+    fetch(`${BASE_PATH}/icons-meta.json`)
       .then(r => r.json())
       .then((data: IconMeta[]) => {
         setMeta(data.slice(0, 24))
@@ -38,7 +39,7 @@ export function HomeIconGrid() {
   }, [])
 
   useEffect(() => {
-    fetch('/icons-svg.json')
+    fetch(`${BASE_PATH}/icons-svg.json`)
       .then(r => r.json())
       .then((data: IconSvg[]) => {
         const map = new Map<string, string>()

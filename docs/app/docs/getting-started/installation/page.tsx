@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { BASE_PATH } from '@/lib/config'
 
 export const metadata: Metadata = { title: 'Installation' }
 
@@ -19,7 +20,7 @@ export default function Installation() {
       <div className="not-prose space-y-2.5 my-6">
         {frameworks.map(framework => (
           <div key={framework.name} className="glass-card rounded-xl p-4 flex items-start gap-3">
-            <img src={framework.icon} alt={framework.name} className="w-5 h-5 mt-0.5" />
+            <img src={`${BASE_PATH}${framework.icon}`} alt={framework.name} className="w-5 h-5 mt-0.5" />
             <div className="min-w-0">
               <p className="font-semibold text-[13px] leading-tight mb-0!">{framework.name}</p>
               <code className="text-[12px] font-mono text-surface-500 dark:text-surface-400 block">{framework.command}</code>

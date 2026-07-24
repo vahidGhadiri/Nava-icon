@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback, useEffect, useRef, memo } from 'react'
 import { getCodeSnippet, type Framework, type IconMode } from '@/lib/icons'
+import { BASE_PATH } from '@/lib/config'
 
 interface IconMeta {
   name: string
@@ -64,7 +65,7 @@ export function IconGallery() {
   const sentinelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    fetch('/icons-meta.json')
+    fetch(`${BASE_PATH}/icons-meta.json`)
       .then(r => r.json())
       .then((data: IconMeta[]) => {
         setMeta(data)
@@ -74,7 +75,7 @@ export function IconGallery() {
   }, [])
 
   useEffect(() => {
-    fetch('/icons-svg.json')
+    fetch(`${BASE_PATH}/icons-svg.json`)
       .then(r => r.json())
       .then((data: IconSvg[]) => {
         const map = new Map<string, IconSvg>()

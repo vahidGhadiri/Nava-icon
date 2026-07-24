@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { BASE_PATH } from '@/lib/config'
 
 const frameworks = [
   {
@@ -72,7 +73,7 @@ export function InstallSection() {
                   : 'text-surface-500 dark:text-surface-500 hover:text-surface-700 dark:hover:text-surface-300 hover:bg-black/[0.03] dark:hover:bg-white/[0.03]'
               }`}
             >
-              <img src={framework.icon} alt={framework.name} className="w-4 h-4" />
+              <img src={`${BASE_PATH}${framework.icon}`} alt={framework.name} className="w-4 h-4" />
               <span className="hidden sm:inline">{framework.name}</span>
             </button>
           ))}

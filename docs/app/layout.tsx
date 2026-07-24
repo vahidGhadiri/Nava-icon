@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import type { Metadata } from 'next'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Header } from '@/components/header'
+import { BASE_PATH } from '@/lib/config'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
   },
   description: 'Professional open-source icon library. SVG source of truth, framework-agnostic.',
   icons: {
-    icon: '/favicon.svg',
+    icon: `${BASE_PATH}/favicon.svg`,
   },
 }
 
