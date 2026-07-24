@@ -39,10 +39,10 @@ export default function UsingIcons() {
             </tr>
           </thead>
           <tbody className="text-surface-500 dark:text-surface-400">
-            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">Tree Shaking</td><td className="py-2.5">✅</td><td className="py-2.5">❌</td></tr>
-            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">Type Safety</td><td className="py-2.5">✅ Full</td><td className="py-2.5">⚠️ Partial</td></tr>
-            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">Runtime Flexibility</td><td className="py-2.5">❌</td><td className="py-2.5">✅</td></tr>
-            <tr><td className="py-2.5">Mode Switching</td><td className="py-2.5">✅</td><td className="py-2.5">✅</td></tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">Tree Shaking</td><td className="py-2.5">✓</td><td className="py-2.5">✗</td></tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">Type Safety</td><td className="py-2.5">✓ Full</td><td className="py-2.5">⚠️ Partial</td></tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">Runtime Flexibility</td><td className="py-2.5">✗</td><td className="py-2.5">✓</td></tr>
+            <tr><td className="py-2.5">Mode Switching</td><td className="py-2.5">✓</td><td className="py-2.5">✓</td></tr>
           </tbody>
         </table>
       </div>

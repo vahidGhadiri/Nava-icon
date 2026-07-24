@@ -59,7 +59,7 @@ When you import the package in a `<script type="module">`, only the icons actual
 **Important:** Tree shaking only works with **static imports** in a module context. If you dynamically add icon elements at runtime (via `document.createElement`), all icons will be included because the bundler can't trace them.
 
 ```html
-<!-- ✅ Tree-shakeable — only home and search are bundled -->
+<!-- ✓ Tree-shakeable — only home and search are bundled -->
 <script type="module">
   import '@whydrf/nava-icon-web-components'
 </script>
