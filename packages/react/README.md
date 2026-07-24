@@ -63,7 +63,7 @@ Your bundler (webpack, Vite, Rollup, esbuild) traces this import and includes **
 In contrast, this pattern imports everything:
 
 ```tsx
-// ❌ Don't do this in production — bundles all 950+ icons
+// ✗ Don't do this in production — bundles all 950+ icons
 import * as Icons from '@whydrf/nava-icon-react'
 ```
 
@@ -206,11 +206,11 @@ The package includes full TypeScript definitions. You get autocompletion for ico
 import type { IconName, IconMode, IconProps } from '@whydrf/nava-icon-react'
 
 // IconName gives you autocompletion for all 950+ icon names
-const icon: IconName = 'home'    // ✅ valid
-const bad: IconName = 'invalid'  // ❌ compile error
+const icon: IconName = 'home'    // ✓ valid
+const bad: IconName = 'invalid'  // ✗ compile error
 
 // IconMode constrains to 'regular' | 'filled'
-const mode: IconMode = 'filled'  // ✅
+const mode: IconMode = 'filled'  // ✓
 
 // IconProps for extending the component
 function CustomIcon(props: IconProps) {
@@ -253,10 +253,10 @@ Browse all 950+ icons with live preview at [**Nava Icons Docs**](https://vahidgh
 |---|---|---|---|---|
 | Icons | 950+ | 5000+ | 300+ | 1500+ |
 | Variants | Regular + Filled | Varies by set | Outline + Solid | Stroke only |
-| Tree shaking | ✅ Full | ✅ Full | ✅ Full | ✅ Full |
-| TypeScript | ✅ | Partial | ✅ | ✅ |
-| Dynamic API | ✅ | ✅ | ❌ | ❌ |
-| SSR | ✅ | ✅ | ✅ | ✅ |
+| Tree shaking | ✓ Full | ✓ Full | ✓ Full | ✓ Full |
+| TypeScript | ✓ | Partial | ✓ | ✓ |
+| Dynamic API | ✓ | ✓ | ✗ | ✗ |
+| SSR | ✓ | ✓ | ✓ | ✓ |
 
 Nava Icons strikes a balance between quantity and quality — every icon is designed with the same visual language, so your UI stays consistent.
 

@@ -65,7 +65,7 @@ Your bundler (Vite, Rollup, webpack) traces this import and includes **only** th
 In contrast, this pattern imports everything:
 
 ```vue
-<!-- ❌ Don't do this in production — bundles all 950+ icons -->
+<!-- ✗ Don't do this in production — bundles all 950+ icons -->
 <script setup>
 import * as Icons from '@whydrf/nava-icon-vue'
 </script>
@@ -230,11 +230,11 @@ The package includes full TypeScript definitions. You get autocompletion for ico
 import type { IconName, IconMode } from '@whydrf/nava-icon-vue'
 
 // IconName gives you autocompletion for all 950+ icon names
-const icon: IconName = 'home'    // ✅ valid
-const bad: IconName = 'invalid'  // ❌ compile error
+const icon: IconName = 'home'    // ✓ valid
+const bad: IconName = 'invalid'  // ✗ compile error
 
 // IconMode constrains to 'regular' | 'filled'
-const mode: IconMode = 'filled'  // ✅
+const mode: IconMode = 'filled'  // ✓
 </script>
 ```
 
