@@ -13,3 +13,7 @@
 - **Reduce Dynamic API Bundle Size**
 
   - Optimize the dynamic Icon component to minimize bundle size while preserving runtime icon resolution.
+
+- **Adding CLI**
+
+  - It is kinda vague
