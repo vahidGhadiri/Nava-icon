@@ -185,7 +185,7 @@ Nava Icons works in all modern browsers:
 
 ## Icon Gallery
 
-Browse all 950+ icons with live preview and copy-paste code snippets at [**Nava Icons Docs**](https://vahidghadiri.github.io/Nava-icon/).
+Browse all 950+ icons with live preview and copy-paste code snippets at **[https://vahidghadiri.github.io/Nava-icon/](https://vahidghadiri.github.io/Nava-icon/)**.
 
 ### Popular Icons
 
