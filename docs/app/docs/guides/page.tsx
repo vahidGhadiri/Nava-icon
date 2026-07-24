@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { BASE_PATH } from '@/lib/config'
 
 export const metadata: Metadata = { title: 'Guides' }
 
@@ -20,7 +21,7 @@ export default function GuidesIndex() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {guides.map(guide => (
           <Link key={guide.href} href={guide.href} className="glass-card rounded-xl p-4 group flex items-start gap-3">
-            <img src={guide.icon} alt={guide.name} className="w-4 h-4 mt-0.5" />
+            <img src={`${BASE_PATH}${guide.icon}`} alt={guide.name} className="w-4 h-4 mt-0.5" />
             <div>
               <h3 className="font-semibold text-[13px] mb-1 group-hover:text-primary-500 transition-colors">{guide.name}</h3>
               <p className="text-[12px] text-surface-400">{guide.desc}</p>
