@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@whydrf/nava-icon-web-components"><img src="https://img.shields.io/npm/v/@whydrf/nava-icon-web-components?style=flat-square&color=purple" alt="npm version"></a>
-  <a href="https://github.com/whydrf/nava-icon/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@whydrf/nava-icon-web-components?style=flat-square" alt="license"></a>
+  <a href="https://github.com/vahidGhadiri/nava-icon/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@whydrf/nava-icon-web-components?style=flat-square" alt="license"></a>
   <a href="https://www.npmjs.com/package/@whydrf/nava-icon-web-components"><img src="https://img.shields.io/npm/dm/@whydrf/nava-icon-web-components?style=flat-square&color=purple" alt="npm downloads"></a>
 </p>
 
@@ -18,7 +18,7 @@
 
 ## What is this?
 
-`@whydrf/nava-icon-web-components` is the framework-agnostic binding for [Nava Icons](https://github.com/whydrf/nava-icon) — a collection of 950+ handcrafted SVG icons. Each icon is a native Web Component using the Custom Elements API, so it works everywhere: vanilla HTML, React, Vue, Angular, Svelte, Solid, Lit — any framework that can render HTML.
+`@whydrf/nava-icon-web-components` is the framework-agnostic binding for [Nava Icons](https://vahidghadiri.github.io/Nava-icon/) — a collection of 950+ handcrafted SVG icons. Each icon is a native Web Component using the Custom Elements API, so it works everywhere: vanilla HTML, React, Vue, Angular, Svelte, Solid, Lit — any framework that can render HTML.
 
 Unlike icon fonts or SVG sprites, every icon here is a proper Custom Element with Shadow DOM encapsulation. You use it in your markup exactly like any native HTML element — no framework, no build step, no configuration.
 
@@ -306,4 +306,4 @@ Each icon is registered as a custom element with the prefix `nava-icon-` followe
 
 ## License
 
-[MIT](https://github.com/whydrf/nava-icon/blob/main/LICENSE) &copy; [whydrf](https://github.com/whydrf)
+[MIT](https://github.com/vahidGhadiri/nava-icon/blob/main/LICENSE) &copy; [whydrf](https://github.com/whydrf)

@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@whydrf/nava-icon-react"><img src="https://img.shields.io/npm/v/@whydrf/nava-icon-react?style=flat-square&color=blue" alt="npm version"></a>
-  <a href="https://github.com/whydrf/nava-icon/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@whydrf/nava-icon-react?style=flat-square" alt="license"></a>
+  <a href="https://github.com/vahidGhadiri/nava-icon/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@whydrf/nava-icon-react?style=flat-square" alt="license"></a>
   <a href="https://www.npmjs.com/package/@whydrf/nava-icon-react"><img src="https://img.shields.io/npm/dm/@whydrf/nava-icon-react?style=flat-square&color=blue" alt="npm downloads"></a>
 </p>
 

@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@whydrf/nava-icon-vue"><img src="https://img.shields.io/npm/v/@whydrf/nava-icon-vue?style=flat-square&color=emerald" alt="npm version"></a>
-  <a href="https://github.com/whydrf/nava-icon/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@whydrf/nava-icon-vue?style=flat-square" alt="license"></a>
+  <a href="https://github.com/vahidGhadiri/nava-icon/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@whydrf/nava-icon-vue?style=flat-square" alt="license"></a>
   <a href="https://www.npmjs.com/package/@whydrf/nava-icon-vue"><img src="https://img.shields.io/npm/dm/@whydrf/nava-icon-vue?style=flat-square&color=emerald" alt="npm downloads"></a>
 </p>
 
@@ -18,7 +18,7 @@
 
 ## What is this?
 
-`@whydrf/nava-icon-vue` is the Vue 3 binding for [Nava Icons](https://github.com/whydrf/nava-icon) — a collection of 950+ handcrafted SVG icons. Each icon is a native Vue component using the Composition API, with full TypeScript support, tree shaking, and two visual variants (regular outlines and filled shapes).
+`@whydrf/nava-icon-vue` is the Vue 3 binding for [Nava Icons](https://vahidghadiri.github.io/Nava-icon/) — a collection of 950+ handcrafted SVG icons. Each icon is a native Vue component using the Composition API, with full TypeScript support, tree shaking, and two visual variants (regular outlines and filled shapes).
 
 Unlike icon fonts or SVG sprites, every icon here is a proper Vue component with props, events, and fallthrough attributes. You use it in your templates exactly like any other component.
 
@@ -275,4 +275,4 @@ Browse all 950+ icons with live preview at **[https://vahidghadiri.github.io/Nav
 
 ## License
 
-[MIT](https://github.com/whydrf/nava-icon/blob/main/LICENSE) &copy; [whydrf](https://github.com/whydrf)
+[MIT](https://github.com/vahidGhadiri/nava-icon/blob/main/LICENSE) &copy; [whydrf](https://github.com/whydrf)
