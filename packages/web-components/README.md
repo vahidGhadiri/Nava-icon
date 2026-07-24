@@ -164,7 +164,7 @@ You can theme icons using CSS custom properties that inherit through the Shadow 
 | **Weather** | `sun`, `moon`, `cloud`, `droplet`, `wind`, `umbrella` |
 | **Shopping** | `cart`, `credit-card`, `bag`, `tag`, `badge`, `diamond` |
 
-Browse all 950+ icons with live preview at [**nava-icons.dev**](https://nava-icons.dev).
+Browse all 950+ icons with live preview at [**Nava Icons Docs**](https://vahidghadiri.github.io/Nava-icon/).
 
 ## Accessibility
 
