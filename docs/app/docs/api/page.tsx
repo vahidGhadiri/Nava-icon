@@ -7,8 +7,7 @@ export default function APIReference() {
     <article className="prose dark:prose-invert max-w-none">
       <h1>API Reference</h1>
       <p className="text-surface-500 dark:text-surface-400 text-[15px] leading-relaxed">
-        Nava Icons provides two APIs: static imports for tree shaking and a dynamic runtime API.
-        Both support the <code>mode</code> prop.
+        Nava Icons provides three APIs: static imports for tree shaking, a dynamic runtime API, and global configuration for setting defaults across your app.
       </p>
 
       <h2>Static API (Recommended)</h2>
@@ -67,14 +66,8 @@ import type { IconName, IconMode } from '@whydrf/nava-icon-react'
             </tr>
           </thead>
           <tbody className="text-surface-500 dark:text-surface-400">
-            <tr className="border-b border-surface-100 dark:border-surface-800/50">
-              <td className="py-2.5 font-mono text-[12px]">"regular"</td>
-              <td className="py-2.5">Stroke-based outline (default)</td>
-            </tr>
-            <tr>
-              <td className="py-2.5 font-mono text-[12px]">"filled"</td>
-              <td className="py-2.5">Solid fill variant</td>
-            </tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">&quot;regular&quot;</td><td className="py-2.5">Stroke-based outline (default)</td></tr>
+            <tr><td className="py-2.5 font-mono text-[12px]">&quot;filled&quot;</td><td className="py-2.5">Solid fill variant</td></tr>
           </tbody>
         </table>
       </div>
@@ -88,22 +81,11 @@ import type { IconName, IconMode } from '@whydrf/nava-icon-react'
             </tr>
           </thead>
           <tbody className="text-surface-500 dark:text-surface-400">
-            <tr className="border-b border-surface-100 dark:border-surface-800/50">
-              <td className="py-2.5">@whydrf/nava-icon-react</td>
-              <td className="py-2.5 font-mono text-[12px]">React components</td>
-            </tr>
-            <tr className="border-b border-surface-100 dark:border-surface-800/50">
-              <td className="py-2.5">@whydrf/nava-icon-vue</td>
-              <td className="py-2.5 font-mono text-[12px]">Vue components</td>
-            </tr>
-            <tr className="border-b border-surface-100 dark:border-surface-800/50">
-              <td className="py-2.5">@whydrf/nava-icon-angular</td>
-              <td className="py-2.5 font-mono text-[12px]">Angular components</td>
-            </tr>
-            <tr>
-              <td className="py-2.5">@whydrf/nava-icon-web-components</td>
-              <td className="py-2.5 font-mono text-[12px]">Custom elements</td>
-            </tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">@whydrf/nava-icon-core</td><td className="py-2.5 font-mono text-[12px]">NavaIconConfig type</td></tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">@whydrf/nava-icon-react</td><td className="py-2.5 font-mono text-[12px]">Icon, NavaIconProvider, useNavaIconConfig</td></tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">@whydrf/nava-icon-vue</td><td className="py-2.5 font-mono text-[12px]">NavaIcon, NavaIconPlugin, useNavaIconConfig</td></tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5">@whydrf/nava-icon-angular</td><td className="py-2.5 font-mono text-[12px]">IconComponent, NAVA_ICON_CONFIG</td></tr>
+            <tr><td className="py-2.5">@whydrf/nava-icon-web-components</td><td className="py-2.5 font-mono text-[12px]">setNavaIconConfig, getNavaIconConfig</td></tr>
           </tbody>
         </table>
       </div>
