@@ -13,6 +13,11 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "import": "./dist/config.js",
+      "require": "./dist/config.cjs"
+    },
     "./icons": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
@@ -30,6 +35,9 @@
     "dev": "tsup --config ../../tsup.config.ts --watch",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@whydrf/nava-icon-core": "workspace:*"
   },
   "peerDependencies": {
     "@angular/common": ">=17",
