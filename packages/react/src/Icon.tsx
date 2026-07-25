@@ -6,6 +6,7 @@ import {
 } from "react";
 import type { IconName } from "./types.js";
 import * as iconModules from "./icons/index.js";
+import { useNavaIconConfig } from "./NavaIconProvider.js";
 
 export interface IconProps {
   /** Icon name in PascalCase (e.g., "HomeIcon") or kebab-case (e.g., "home") */
@@ -49,6 +50,7 @@ function normalizeIconName(name: string): string {
  */
 export const Icon = forwardRef<SVGSVGElement, IconProps>(
   ({ name, size, color, strokeWidth, className, title, style, mode, ...props }, ref) => {
+    const config = useNavaIconConfig();
     const iconName = normalizeIconName(name);
     const Component = iconRecord[iconName];
 
@@ -61,10 +63,10 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
 
     return createElement(Component, {
       ref,
-      size,
-      color,
-      strokeWidth,
-      className,
+      size: size ?? config.size,
+      color: color ?? config.color,
+      strokeWidth: strokeWidth ?? config.strokeWidth,
+      className: className ?? config.className,
       title,
       style,
       mode,
