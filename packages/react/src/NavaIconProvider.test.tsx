@@ -1,13 +1,18 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { NavaIconProvider, useNavaIconConfig } from "./NavaIconProvider.js";
 import { Icon } from "./Icon.js";
 import type { ReactNode } from "react";
 
-vi.mock("./icons/index.js", () => ({
-  HomeIcon: (props: { size?: number | string }) => (
-    <svg data-testid="mock-icon" width={props.size} height={props.size} />
-  ),
+vi.mock("./icons/loaders.js", () => ({
+  iconLoaders: {
+    home: () =>
+      Promise.resolve({
+        default: (props: { size?: number | string }) => (
+          <svg data-testid="mock-icon" width={props.size} height={props.size} />
+        ),
+      }),
+  },
 }));
 
 function TestConsumer() {
@@ -36,29 +41,35 @@ describe("NavaIconProvider", () => {
     expect(config.color).toBe("red");
   });
 
-  it("Icon component applies provider values", () => {
+  it("Icon component applies provider values", async () => {
     const { container } = render(
       <Provider size={32} color="blue">
         <Icon name="home" />
       </Provider>
     );
-    const svg = container.querySelector("svg");
-    expect(svg).toBeTruthy();
+    await waitFor(() => {
+      const svg = container.querySelector("svg");
+      expect(svg).toBeTruthy();
+    });
   });
 
-  it("component props override provider values", () => {
+  it("component props override provider values", async () => {
     const { container } = render(
       <Provider size={32} color="blue">
         <Icon name="home" size={48} />
       </Provider>
     );
-    const svg = container.querySelector("svg");
-    expect(svg).toBeTruthy();
+    await waitFor(() => {
+      const svg = container.querySelector("svg");
+      expect(svg).toBeTruthy();
+    });
   });
 
-  it("Icon works without provider", () => {
+  it("Icon works without provider", async () => {
     const { container } = render(<Icon name="home" />);
-    const svg = container.querySelector("svg");
-    expect(svg).toBeTruthy();
+    await waitFor(() => {
+      const svg = container.querySelector("svg");
+      expect(svg).toBeTruthy();
+    });
   });
 });

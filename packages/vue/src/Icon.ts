@@ -1,18 +1,14 @@
-import { defineComponent, h, inject, type Component, type PropType } from "vue";
-import * as iconModules from "./icons/index.js";
+import { defineComponent, h, inject, defineAsyncComponent, type PropType } from "vue";
+import { iconLoaders } from "./icons/loaders.js";
 import type { IconName } from "./types.js";
 import { NAVA_ICON_CONFIG_KEY } from "./NavaIcon.js";
 
-const iconRecord = iconModules as unknown as Record<string, Component>;
-
-function normalizeIconName(name: string): string {
-  if (name.endsWith("Icon")) return name;
-  return (
-    name
-      .split(/[-_\s]+/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join("") + "Icon"
-  );
+function toKebabCase(name: string): string {
+  if (name.includes("-")) return name;
+  return name
+    .replace(/Icon$/, "")
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .toLowerCase();
 }
 
 export default defineComponent({
@@ -43,17 +39,19 @@ export default defineComponent({
     const config = inject(NAVA_ICON_CONFIG_KEY, {});
 
     return () => {
-      const iconName = normalizeIconName(props.name as string);
-      const Component = iconRecord[iconName];
+      const kebabName = toKebabCase(props.name as string);
+      const loader = iconLoaders[kebabName];
 
-      if (!Component) {
+      if (!loader) {
         if (typeof console !== "undefined") {
           console.warn(`[nava-icon] Icon "${props.name}" not found.`);
         }
         return null;
       }
 
-      return h(Component, {
+      const AsyncIcon = defineAsyncComponent(loader);
+
+      return h(AsyncIcon, {
         size: props.size ?? config.size ?? 24,
         color: props.color ?? config.color ?? "currentColor",
         strokeWidth: props.strokeWidth ?? config.strokeWidth ?? 0.5,

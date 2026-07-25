@@ -25,6 +25,8 @@ function writeFrameworkFiles(
 
     writeUtf8(framework.indexPath, framework.indexContent(icons));
 
+    writeUtf8(framework.loaderPath, framework.loaderContent(icons));
+
     if (framework.typePath) {
       writeUtf8(framework.typePath, renderIconTypes(icons));
     }

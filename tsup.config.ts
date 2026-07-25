@@ -31,23 +31,25 @@ function getEntries(): Record<string, string> | string[] {
 
   if (pkgName === "react") {
     const iconPaths = iconFiles.map((f) => join(iconsDir, f));
-    return ["src/index.ts", "src/Icon.tsx", "src/NavaIconProvider.tsx", "src/types.ts", ...iconPaths];
+    return ["src/index.ts", "src/Icon.tsx", "src/NavaIconProvider.tsx", "src/types.ts", join(iconsDir, "loaders.ts"), ...iconPaths];
   }
 
   if (pkgName === "vue") {
     const iconPaths = iconFiles.map((f) => join(iconsDir, f));
-    return ["src/index.ts", "src/Icon.ts", "src/NavaIcon.ts", "src/types.ts", ...iconPaths];
+    return ["src/index.ts", "src/Icon.ts", "src/NavaIcon.ts", "src/types.ts", join(iconsDir, "loaders.ts"), ...iconPaths];
   }
 
   const entries: Record<string, string> = { index: "src/index.ts" };
 
   if (pkgName === "angular") {
     entries["config"] = "src/config.ts";
+    entries["icons/loaders"] = join(iconsDir, "loaders.ts");
   }
 
   if (pkgName === "web-components") {
     entries["icon-base"] = "src/icon-base.ts";
     entries["config"] = "src/config.ts";
+    entries["icons/loaders"] = join(iconsDir, "loaders.ts");
   }
 
   for (const file of iconFiles) {

@@ -26,6 +26,8 @@ export interface FrameworkConfig {
   fileExtension: string;
   indexPath: string;
   indexContent: (icons: ParsedIcon[]) => string;
+  loaderPath: string;
+  loaderContent: (icons: ParsedIcon[]) => string;
   componentGenerator: ComponentGenerator;
   typePath?: string;
 }
