@@ -171,8 +171,8 @@ import { HomeIcon } from "@whydrf/nava-icon-react";
 **Avoid this pattern in production code:**
 
 ```tsx
-// ✗ This imports ALL 950+ icons — defeats tree shaking
-import * as Icons from '@whydrf/nava-icon-react'
+// ❌ This imports ALL 950+ icons — defeats tree shaking
+import * as Icons from "@whydrf/nava-icon-react";
 ```
 
 If you need dynamic icon selection, use the `Icon` component instead. It's designed for that use case and documents the trade-off clearly.
@@ -188,8 +188,8 @@ Every package ships with full TypeScript definitions. You get:
 ```tsx
 import type { IconName, IconMode } from "@whydrf/nava-icon-react";
 
-const icon: IconName = 'home'    // ✓ valid
-const bad: IconName = 'invalid'  // ✗ compile error
+const icon: IconName = "home"; // ✅ valid
+const bad: IconName = "invalid"; // ❌ compile error
 ```
 
 ## Server-Side Rendering
