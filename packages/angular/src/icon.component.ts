@@ -1,6 +1,8 @@
-import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import type { IconName } from "./types.js";
+import { NAVA_ICON_CONFIG } from "./config.js";
+import type { NavaIconConfig } from "@whydrf/nava-icon-core";
 import * as iconModules from "./icons/index.js";
 
 function normalizeIconName(name: string): string {
@@ -25,10 +27,12 @@ function normalizeIconName(name: string): string {
   `,
 })
 export class IconComponent {
+  private config: NavaIconConfig = inject(NAVA_ICON_CONFIG, { optional: true }) ?? {};
+
   @Input() name!: IconName;
-  @Input() size: number | string = 24;
-  @Input() color: string = "currentColor";
-  @Input() strokeWidth: number | string = 0.5;
+  @Input() size: number | string = this.config.size ?? 24;
+  @Input() color: string = this.config.color ?? "currentColor";
+  @Input() strokeWidth: number | string = this.config.strokeWidth ?? 0.5;
   @Input() mode: "regular" | "filled" = "regular";
 
   get iconComponent(): any {
