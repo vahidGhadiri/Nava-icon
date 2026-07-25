@@ -36,9 +36,6 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
   },
-  "dependencies": {
-    "@whydrf/nava-icon-core": "workspace:*"
-  },
   "peerDependencies": {
     "@angular/common": ">=17",
     "@angular/core": ">=17"
@@ -46,6 +43,7 @@
   "devDependencies": {
     "@angular/common": "^19.0.0",
     "@angular/core": "^19.0.0",
+    "@whydrf/nava-icon-core": "workspace:*",
     "tsup": "^8.0.0",
     "typescript": "^5.7.0"
   },

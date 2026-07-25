@@ -21,7 +21,8 @@ export function generateVueComponent(icon: ParsedIcon): string {
   const filledStrokeBased = icon.filled?.strokeBased ?? false;
   const regularStrokeBased = icon.regular?.strokeBased ?? false;
 
-  return `import { defineComponent, h, type PropType } from "vue";
+  return `import { defineComponent, h, inject, type PropType } from "vue";
+import { NAVA_ICON_CONFIG_KEY } from "../NavaIcon.js";
 
 const regularPaths = \`${regular}\`;
 const filledPaths = \`${filled}\`;
@@ -29,34 +30,40 @@ const filledPaths = \`${filled}\`;
 export const ${componentName} = defineComponent({
   name: "${componentName}",
   props: {
-    size: { type: [Number, String] as PropType<number | string>, default: 24 },
-    color: { type: String, default: "currentColor" },
-    strokeWidth: { type: [Number, String] as PropType<number | string>, default: 0.5 },
-    className: { type: String },
+    size: { type: [Number, String] as PropType<number | string>, default: undefined },
+    color: { type: String, default: undefined },
+    strokeWidth: { type: [Number, String] as PropType<number | string>, default: undefined },
+    className: { type: String, default: undefined },
     style: { type: Object as PropType<Record<string, string | number>> },
     title: { type: String },
-    mode: { type: String as PropType<"regular" | "filled">, default: "regular" },
+    mode: { type: String as PropType<"regular" | "filled">, default: undefined },
   },
   setup(props) {
+    const config = inject(NAVA_ICON_CONFIG_KEY, {});
     return () => {
-      const isFilled = props.mode === "filled" && filledPaths;
+      const size = props.size ?? config.size ?? 24;
+      const color = props.color ?? config.color;
+      const strokeWidth = props.strokeWidth ?? config.strokeWidth ?? 0.5;
+      const className = props.className ?? config.className;
+      const mode = props.mode ?? "regular";
+      const isFilled = mode === "filled" && filledPaths;
       const paths = isFilled ? filledPaths : regularPaths;
       const strokeBased = isFilled ? ${filledStrokeBased} : ${regularStrokeBased};
-      const appliedColor = props.color || "currentColor";
+      const appliedColor = color || "currentColor";
 
       return h(
         "svg",
         {
           xmlns: "http://www.w3.org/2000/svg",
           viewBox: "${defaultSvg.viewBox}",
-          width: props.size,
-          height: props.size,
+          width: size,
+          height: size,
           fill: strokeBased ? "none" : appliedColor,
           stroke: strokeBased ? appliedColor : "none",
-          "stroke-width": props.strokeWidth,
+          "stroke-width": strokeWidth,
           "stroke-linecap": strokeBased ? "round" : undefined,
           "stroke-linejoin": strokeBased ? "round" : undefined,
-          class: props.className,
+          class: className,
           style: props.style,
           innerHTML: paths,
         },

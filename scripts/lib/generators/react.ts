@@ -22,6 +22,7 @@ export function generateReactComponent(icon: ParsedIcon): string {
   const regularStrokeBased = icon.regular?.strokeBased ?? false;
 
   return `import type { CSSProperties } from "react";
+import { useNavaIconConfig } from "../NavaIconProvider.js";
 
 interface IconProps {
   size?: number | string;
@@ -37,11 +38,12 @@ const regularPaths = \`${regular}\`;
 const filledPaths = \`${filled}\`;
 
 export function ${componentName}(props: IconProps) {
+  const config = useNavaIconConfig();
   const {
-    size = 24,
-    color,
-    strokeWidth,
-    className,
+    size = config.size ?? 24,
+    color = config.color,
+    strokeWidth = config.strokeWidth,
+    className = config.className,
     style,
     title,
     mode = "regular",

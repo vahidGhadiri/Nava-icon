@@ -8,6 +8,7 @@
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": [
-    "@nava-icon/docs"
+    "@nava-icon/docs",
+    "@whydrf/nava-icon-core"
   ]
 }

@@ -46,14 +46,12 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
   },
-  "dependencies": {
-    "@whydrf/nava-icon-core": "workspace:*"
-  },
   "peerDependencies": {
     "react": ">=18"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
+    "@whydrf/nava-icon-core": "workspace:*",
     "react": "^19.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.7.0"

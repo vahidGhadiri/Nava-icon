@@ -21,7 +21,9 @@ export function generateWebComponent(icon: ParsedIcon): string {
   const filledStrokeBased = icon.filled?.strokeBased ?? false;
   const regularStrokeBased = icon.regular?.strokeBased ?? false;
 
-  return `class NavaIcon${componentName} extends HTMLElement {
+  return `import { getNavaIconConfig } from "../config.js";
+
+class NavaIcon${componentName} extends HTMLElement {
   static get observedAttributes() {
     return ["size", "color", "stroke-width", "mode"];
   }
@@ -40,9 +42,10 @@ export function generateWebComponent(icon: ParsedIcon): string {
   }
 
   render() {
-    const size = this.getAttribute("size") || "24";
-    const color = this.getAttribute("color") || "currentColor";
-    const strokeWidth = this.getAttribute("stroke-width") || "0.5";
+    const config = getNavaIconConfig();
+    const size = this.getAttribute("size") ?? config.size ?? 24;
+    const color = this.getAttribute("color") ?? config.color ?? "currentColor";
+    const strokeWidth = this.getAttribute("stroke-width") ?? config.strokeWidth ?? 0.5;
     const mode = this.getAttribute("mode") || "regular";
     const isFilled = mode === "filled";
     const paths = isFilled ? \`${filled}\` : \`${regular}\`;
