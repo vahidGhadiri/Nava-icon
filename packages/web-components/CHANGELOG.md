@@ -1,5 +1,11 @@
 # @whydrf/nava-icon-web-components
 
+## 1.4.1
+
+### Patch Changes
+
+- Patch release 1.4.1
+
 ## 1.4.0
 
 ### Minor Changes
