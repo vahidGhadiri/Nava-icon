@@ -13,37 +13,60 @@ export default function VueGuide() {
       <h2>Usage</h2>
       <pre className="not-prose code-block">
         <code>{`<script setup>
-import { Home, Search } from '@whydrf/nava-icon-vue'
+import { HomeIcon, SearchIcon } from '@whydrf/nava-icon-vue'
 </script>
 
 <template>
-  <Home />
-  <Search :size="24" color="gray" />
+  <HomeIcon />
+  <SearchIcon :size="24" color="gray" />
 </template>`}</code>
       </pre>
       <h2>Mode</h2>
       <p>Switch between regular (stroke) and filled (solid) variants with the <code>mode</code> prop.</p>
       <pre className="not-prose code-block">
         <code>{`<script setup>
-import { CheckCircle, Home } from '@whydrf/nava-icon-vue'
+import { CheckCircleIcon, HomeIcon } from '@whydrf/nava-icon-vue'
 </script>
 
 <template>
-  <CheckCircle mode="regular" />
-  <CheckCircle mode="filled" />
-  <Home mode="filled" color="blue" />
+  <CheckCircleIcon mode="regular" />
+  <CheckCircleIcon mode="filled" />
+  <HomeIcon mode="filled" color="blue" />
 </template>`}</code>
       </pre>
       <h2>Dynamic Import</h2>
       <pre className="not-prose code-block">
         <code>{`<script setup>
-import { Icon } from '@whydrf/nava-icon-vue'
+import { NavaIcon } from '@whydrf/nava-icon-vue'
 </script>
 
 <template>
-  <Icon name="home" />
-  <Icon name="search" :size="24" color="gray" />
-  <Icon name="check-circle" mode="filled" />
+  <NavaIcon name="home" />
+  <NavaIcon name="search" :size="24" color="gray" />
+  <NavaIcon name="check-circle" mode="filled" />
+</template>`}</code>
+      </pre>
+      <h2>Global Configuration</h2>
+      <p>Install the <code>NavaIcon</code> plugin to set default icon props. All icons inherit these values.</p>
+      <pre className="not-prose code-block">
+        <code>{`// main.ts
+import { createApp } from 'vue'
+import { NavaIcon } from '@whydrf/nava-icon-vue'
+import App from './App.vue'
+
+const app = createApp(App)
+app.use(NavaIcon, { size: 20, color: 'gray', strokeWidth: 1.5 })
+app.mount('#app')`}</code>
+      </pre>
+      <p>Component props always override plugin values. Use <code>useNavaIconConfig</code> to read the current config:</p>
+      <pre className="not-prose code-block">
+        <code>{`<script setup>
+import { useNavaIconConfig } from '@whydrf/nava-icon-vue'
+const config = useNavaIconConfig()
+</script>
+
+<template>
+  <pre>{{ config }}</pre>
 </template>`}</code>
       </pre>
     </article>
