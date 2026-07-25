@@ -1,16 +1,19 @@
 import { describe, it, expect, vi } from "vitest";
 import { defineComponent, h } from "vue";
-import { mount } from "@vue/test-utils";
+import { mount, flushPromises } from "@vue/test-utils";
 import { NavaIcon, useNavaIconConfig, NAVA_ICON_CONFIG_KEY } from "./NavaIcon.js";
 import Icon from "./Icon.js";
 
-vi.mock("./icons/index.js", () => ({
-  HomeIcon: {
-    name: "HomeIcon",
-    props: ["size", "color", "strokeWidth", "mode", "className", "style", "title"],
-    setup(props: Record<string, unknown>) {
-      return () => h("svg", { "data-testid": "mock-icon", width: props.size, height: props.size });
-    },
+vi.mock("./icons/loaders.js", () => ({
+  iconLoaders: {
+    home: () =>
+      Promise.resolve({
+        name: "HomeIcon",
+        props: ["size", "color", "strokeWidth", "mode", "className", "style", "title"],
+        setup(props: Record<string, unknown>) {
+          return () => h("svg", { "data-testid": "mock-icon", width: props.size, height: props.size });
+        },
+      }),
   },
 }));
 
@@ -42,7 +45,7 @@ describe("NavaIcon plugin", () => {
 });
 
 describe("NavaIcon with plugin config", () => {
-  it("Icon applies plugin config values", () => {
+  it("Icon applies plugin config values", async () => {
     const wrapper = mount(Icon, {
       props: { name: "home" },
       global: {
@@ -52,13 +55,15 @@ describe("NavaIcon with plugin config", () => {
       },
     });
 
+    await flushPromises();
+
     const svg = wrapper.find("svg");
     expect(svg.exists()).toBe(true);
     expect(svg.attributes("width")).toBe("32");
     expect(svg.attributes("height")).toBe("32");
   });
 
-  it("component props override plugin config", () => {
+  it("component props override plugin config", async () => {
     const wrapper = mount(Icon, {
       props: { name: "home", size: 48 },
       global: {
@@ -68,15 +73,19 @@ describe("NavaIcon with plugin config", () => {
       },
     });
 
+    await flushPromises();
+
     const svg = wrapper.find("svg");
     expect(svg.exists()).toBe(true);
     expect(svg.attributes("width")).toBe("48");
   });
 
-  it("Icon works without plugin", () => {
+  it("Icon works without plugin", async () => {
     const wrapper = mount(Icon, {
       props: { name: "home" },
     });
+
+    await flushPromises();
 
     const svg = wrapper.find("svg");
     expect(svg.exists()).toBe(true);

@@ -1,18 +1,17 @@
-import { Component, Input, ChangeDetectionStrategy, inject } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import type { IconName } from "./types.js";
 import { NAVA_ICON_CONFIG } from "./config.js";
 import type { NavaIconConfig } from "@whydrf/nava-icon-core";
-import * as iconModules from "./icons/index.js";
+import { iconLoaders } from "./icons/loaders.js";
 
-function normalizeIconName(name: string): string {
-  if (name.endsWith("Icon") || name.endsWith("Component")) return name;
-  return (
-    name
-      .split(/[-_\s]+/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join("") + "Icon"
-  );
+function toKebabCase(name: string): string {
+  if (name.includes("-")) return name;
+  return name
+    .replace(/Icon$/, "")
+    .replace(/Component$/, "")
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .toLowerCase();
 }
 
 @Component({
@@ -28,6 +27,8 @@ function normalizeIconName(name: string): string {
 })
 export class IconComponent {
   private config: NavaIconConfig = inject(NAVA_ICON_CONFIG, { optional: true }) ?? {};
+  private cdr = inject(ChangeDetectorRef);
+  private loadedComponents = new Map<string, any>();
 
   @Input() name!: IconName;
   @Input() size: number | string = this.config.size ?? 24;
@@ -35,12 +36,45 @@ export class IconComponent {
   @Input() strokeWidth: number | string = this.config.strokeWidth ?? 0.5;
   @Input() mode: "regular" | "filled" = "regular";
 
-  get iconComponent(): any {
-    if (!this.name) return null;
-    const iconName = normalizeIconName(this.name as string);
-    const iconModule = (iconModules as Record<string, unknown>)[`${iconName}Component`];
-    if (iconModule) return iconModule;
-    const alternateModule = (iconModules as Record<string, unknown>)[iconName];
-    return alternateModule || null;
+  iconComponent: any = null;
+
+  @Input()
+  set iconName(value: IconName) {
+    this.name = value;
+    this.loadIcon();
+  }
+
+  ngOnChanges(): void {
+    this.loadIcon();
+  }
+
+  private async loadIcon(): Promise<void> {
+    if (!this.name) {
+      this.iconComponent = null;
+      return;
+    }
+
+    const kebabName = toKebabCase(this.name as string);
+    const loader = iconLoaders[kebabName];
+
+    if (!loader) {
+      this.iconComponent = null;
+      return;
+    }
+
+    if (this.loadedComponents.has(kebabName)) {
+      this.iconComponent = this.loadedComponents.get(kebabName);
+      this.cdr.detectChanges();
+      return;
+    }
+
+    try {
+      const mod = await loader();
+      this.loadedComponents.set(kebabName, mod);
+      this.iconComponent = mod;
+      this.cdr.detectChanges();
+    } catch {
+      this.iconComponent = null;
+    }
   }
 }

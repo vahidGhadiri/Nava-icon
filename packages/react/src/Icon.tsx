@@ -1,11 +1,13 @@
 import {
   forwardRef,
   createElement,
+  lazy,
+  Suspense,
   type ComponentType,
   type CSSProperties,
 } from "react";
 import type { IconName } from "./types.js";
-import * as iconModules from "./icons/index.js";
+import { iconLoaders } from "./icons/loaders.js";
 import { useNavaIconConfig } from "./NavaIconProvider.js";
 
 export interface IconProps {
@@ -27,16 +29,23 @@ export interface IconProps {
   style?: CSSProperties;
 }
 
-const iconRecord = iconModules as unknown as Record<string, ComponentType<Record<string, unknown>>>;
+const componentCache = new Map<string, ComponentType<Record<string, unknown>>>();
 
-function normalizeIconName(name: string): string {
-  if (name.endsWith("Icon")) return name;
-  return (
-    name
-      .split(/[-_\s]+/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join("") + "Icon"
-  );
+function toKebabCase(name: string): string {
+  if (name.includes("-")) return name;
+  return name
+    .replace(/Icon$/, "")
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .toLowerCase();
+}
+
+function getLazyComponent(name: string): ComponentType<Record<string, unknown>> | null {
+  if (componentCache.has(name)) return componentCache.get(name)!;
+  const loader = iconLoaders[name];
+  if (!loader) return null;
+  const lazyComponent = lazy(() => loader());
+  componentCache.set(name, lazyComponent);
+  return lazyComponent;
 }
 
 /**
@@ -44,34 +53,38 @@ function normalizeIconName(name: string): string {
  *
  * Usage: `<Icon name="home" size={24} color="red" mode="filled" />`
  *
- * **Tree-shaking limitation**: This component imports ALL icons,
- * so it cannot be tree-shaken. For production builds, prefer
- * direct imports: `import { HomeIcon } from "@whydrf/nava-icon-react"`
+ * Icons are lazily loaded on demand — only the requested icon is bundled.
+ * For even smaller bundles, import icons directly:
+ * `import { HomeIcon } from "@whydrf/nava-icon-react/icons/home"`
  */
 export const Icon = forwardRef<SVGSVGElement, IconProps>(
   ({ name, size, color, strokeWidth, className, title, style, mode, ...props }, ref) => {
     const config = useNavaIconConfig();
-    const iconName = normalizeIconName(name);
-    const Component = iconRecord[iconName];
+    const kebabName = toKebabCase(name as string);
+    const LazyComponent = getLazyComponent(kebabName);
 
-    if (!Component) {
+    if (!LazyComponent) {
       if (typeof console !== "undefined") {
         console.warn(`[nava-icon] Icon "${name}" not found.`);
       }
       return null;
     }
 
-    return createElement(Component, {
-      ref,
-      size: size ?? config.size,
-      color: color ?? config.color,
-      strokeWidth: strokeWidth ?? config.strokeWidth,
-      className: className ?? config.className,
-      title,
-      style,
-      mode,
-      ...props,
-    });
+    return createElement(
+      Suspense,
+      { fallback: null },
+      createElement(LazyComponent, {
+        ref,
+        size: size ?? config.size,
+        color: color ?? config.color,
+        strokeWidth: strokeWidth ?? config.strokeWidth,
+        className: className ?? config.className,
+        title,
+        style,
+        mode,
+        ...props,
+      }),
+    );
   },
 );
 
