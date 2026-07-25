@@ -1,8 +1,10 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/whydrf/nava-icon/main/docs/public/favicon.svg" width="60" alt="Nava Icons">
-</p>
 
 <h1 align="center">@whydrf/nava-icon-angular</h1>
+<p align="center">
+  <a href="https://vahidghadiri.github.io/Nava-icon/">
+    Live Documentation
+  </a>
+</p>
 
 <p align="center">
   950+ beautiful, tree-shakeable SVG icons for Angular 17+.
@@ -53,7 +55,7 @@ import { HomeIconComponent, SearchIconComponent, SettingsIconComponent } from '@
 export class NavigationComponent {}
 ```
 
-That's it — no `NavaIconsModule`, no global registration. The component's selector is the kebab-case version of the icon name (e.g., `HomeIconComponent` → `<home-icon>`).
+That's it — no `NavaIconsModule`, no global registration. The component's selector is the kebab-case version of the icon name (e.g., `HomeIconComponent` → `<home-icon>`). For setting default inputs across your app, see [Global Configuration](#global-configuration).
 
 ## How Tree Shaking Works
 
@@ -206,6 +208,52 @@ Icons include built-in accessibility features:
 <!-- Decorative icon — screen reader ignores it -->
 <home-icon />
 ```
+
+## Global Configuration
+
+Instead of passing the same inputs to every icon, provide a global configuration using Angular's Dependency Injection. All `IconComponent` and static icon components will inherit these values.
+
+```typescript
+// app.config.ts
+import { ApplicationConfig } from '@angular/core'
+import { NAVA_ICON_CONFIG } from '@whydrf/nava-icon-angular'
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    {
+      provide: NAVA_ICON_CONFIG,
+      useValue: { size: 20, color: 'gray', strokeWidth: 1.5 },
+    },
+  ],
+}
+```
+
+Or in a module-based app:
+
+```typescript
+// app.module.ts
+import { NgModule } from '@angular/core'
+import { NAVA_ICON_CONFIG } from '@whydrf/nava-icon-angular'
+
+@NgModule({
+  providers: [
+    {
+      provide: NAVA_ICON_CONFIG,
+      useValue: { size: 20, color: 'gray', strokeWidth: 1.5 },
+    },
+  ],
+})
+export class AppModule {}
+```
+
+Now every icon inherits the defaults:
+
+```html
+<home-icon />              <!-- size=20, color="gray", strokeWidth=1.5 -->
+<search-icon [size]="24" /> <!-- size=24 overrides — rest inherited -->
+```
+
+**Inputs always override global configuration.** If you pass `[size]="32"` to an icon, that takes priority over the injected `size`.
 
 ## Server-Side Rendering
 

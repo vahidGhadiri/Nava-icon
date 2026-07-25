@@ -7,7 +7,7 @@ export default function Customization() {
     <article className="prose dark:prose-invert max-w-none">
       <h1>Customization</h1>
       <p className="text-surface-500 dark:text-surface-400 text-[15px] leading-relaxed">
-        All icons accept the same set of props for consistent customization.
+        All icons accept the same set of props for consistent customization. You can also set default values globally using a provider/plugin — see <a href="/docs/guides/global-config">Global Configuration</a>.
       </p>
       <h2>Props Reference</h2>
       <div className="not-prose overflow-x-auto">

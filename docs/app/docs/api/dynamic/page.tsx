@@ -28,6 +28,19 @@ import { Icon } from '@whydrf/nava-icon-vue'
       <p>
         Dynamic API bundles all icon data. Use static imports when possible for optimal bundle size.
       </p>
+      <h2>Global Configuration</h2>
+      <p>
+        The <code>Icon</code> component also inherits values from the global provider/plugin.
+        Provider props are applied first, then overridden by individual component props.
+      </p>
+      <pre className="not-prose code-block">
+        <code>{`import { NavaIconProvider, Icon } from '@whydrf/nava-icon-react'
+
+<NavaIconProvider size={20} color="gray">
+  <Icon name="home" />           {/* size=20, color="gray" */}
+  <Icon name="search" size={24} /> {/* size=24 overrides — color inherited */}
+</NavaIconProvider>`}</code>
+      </pre>
     </article>
   );
 }

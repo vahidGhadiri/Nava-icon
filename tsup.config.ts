@@ -5,6 +5,7 @@ import { join, basename } from "node:path";
 const pkgName = basename(process.cwd());
 
 const configs: Record<string, { ext: string; format: Format[]; external: string[] }> = {
+  core: { ext: ".ts", format: ["esm", "cjs"], external: [] },
   react: { ext: ".tsx", format: ["esm", "cjs"], external: ["react"] },
   vue: { ext: ".ts", format: ["esm", "cjs"], external: ["vue"] },
   angular: { ext: ".component.ts", format: ["esm", "cjs"], external: ["@angular/core", "@angular/common"] },
@@ -24,20 +25,29 @@ function getIconFiles(): string[] {
 function getEntries(): Record<string, string> | string[] {
   const iconFiles = getIconFiles();
 
+  if (pkgName === "core") {
+    return ["src/index.ts"];
+  }
+
   if (pkgName === "react") {
     const iconPaths = iconFiles.map((f) => join(iconsDir, f));
-    return ["src/index.ts", "src/Icon.tsx", "src/types.ts", ...iconPaths];
+    return ["src/index.ts", "src/Icon.tsx", "src/NavaIconProvider.tsx", "src/types.ts", ...iconPaths];
   }
 
   if (pkgName === "vue") {
     const iconPaths = iconFiles.map((f) => join(iconsDir, f));
-    return ["src/index.ts", "src/Icon.ts", "src/types.ts", ...iconPaths];
+    return ["src/index.ts", "src/Icon.ts", "src/NavaIcon.ts", "src/types.ts", ...iconPaths];
   }
 
   const entries: Record<string, string> = { index: "src/index.ts" };
 
+  if (pkgName === "angular") {
+    entries["config"] = "src/config.ts";
+  }
+
   if (pkgName === "web-components") {
     entries["icon-base"] = "src/icon-base.ts";
+    entries["config"] = "src/config.ts";
   }
 
   for (const file of iconFiles) {

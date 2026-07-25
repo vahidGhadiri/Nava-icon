@@ -1,8 +1,11 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/whydrf/nava-icon/main/docs/public/favicon.svg" width="60" alt="Nava Icons">
-</p>
+
 
 <h1 align="center">@whydrf/nava-icon-vue</h1>
+<p align="center">
+  <a href="https://vahidghadiri.github.io/Nava-icon/">
+    Live Documentation
+  </a>
+</p>
 
 <p align="center">
   950+ beautiful, tree-shakeable SVG icons for Vue 3.
@@ -48,7 +51,7 @@ import { HomeIcon, SearchIcon, SettingsIcon } from '@whydrf/nava-icon-vue'
 </template>
 ```
 
-That's it — no plugin to install, no global registration required. Just import and use in your `<script setup>`.
+That's it — no plugin to install, no global registration required. Just import and use in your `<script setup>`. For setting default props across your app, see [Global Configuration](#global-configuration).
 
 ## How Tree Shaking Works
 
@@ -174,6 +177,50 @@ With **Tailwind CSS**, the `color` prop defaults to `currentColor`, so Tailwind'
 
 <!-- Dark mode support -->
 <HomeIcon class="text-gray-900 dark:text-white" />
+```
+
+## Global Configuration
+
+Instead of passing the same props to every icon, install the `NavaIcon` plugin to set defaults once. All `NavaIcon` and static icon components will inherit these values.
+
+```ts
+// main.ts
+import { createApp } from 'vue'
+import { NavaIcon } from '@whydrf/nava-icon-vue'
+import App from './App.vue'
+
+const app = createApp(App)
+app.use(NavaIcon, { size: 20, color: 'gray', strokeWidth: 1.5 })
+app.mount('#app')
+```
+
+Now every icon in your app inherits the defaults:
+
+```vue
+<script setup>
+import { HomeIcon, NavaIcon } from '@whydrf/nava-icon-vue'
+</script>
+
+<template>
+  <HomeIcon />              <!-- size=20, color="gray", strokeWidth=1.5 -->
+  <NavaIcon name="search" :size="24" />  <!-- size=24 overrides — rest inherited -->
+</template>
+```
+
+**Props always override plugin values.** If you pass `:size="32"` to an icon, that takes priority over the plugin's `size`.
+
+You can also read the current configuration in any component:
+
+```vue
+<script setup>
+import { useNavaIconConfig } from '@whydrf/nava-icon-vue'
+
+const config = useNavaIconConfig()
+</script>
+
+<template>
+  <pre>{{ config }}</pre>
+</template>
 ```
 
 ## Accessibility

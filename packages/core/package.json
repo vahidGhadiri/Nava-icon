@@ -1,21 +1,17 @@
 {
-  "name": "@whydrf/nava-icon-web-components",
-  "version": "1.1.2",
+  "name": "@whydrf/nava-icon-core",
+  "version": "1.0.2",
   "type": "module",
-  "sideEffects": [
-    "./dist/icons/*.js"
-  ],
-  "description": "Web Components for Nava Icons",
+  "sideEffects": false,
+  "description": "Shared types and contracts for Nava Icons",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
-    "./icons": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./package.json": "./package.json"
   },
@@ -29,9 +25,6 @@
     "dev": "tsup --config ../../tsup.config.ts --watch",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@whydrf/nava-icon-core": "workspace:*"
   },
   "devDependencies": {
     "tsup": "^8.0.0",
@@ -47,6 +40,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/vahidGhadiri/Nava-icon",
-    "directory": "packages/web-components"
+    "directory": "packages/core"
   }
 }
