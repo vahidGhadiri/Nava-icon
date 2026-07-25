@@ -25,6 +25,7 @@ const sections = [
       { href: '/docs/guides/vue', label: 'Vue' },
       { href: '/docs/guides/angular', label: 'Angular' },
       { href: '/docs/guides/web-components', label: 'Web Components' },
+      { href: '/docs/guides/global-config', label: 'Global Config' },
     ]
   },
   {

@@ -14,11 +14,11 @@ export default function APIReference() {
       <h2>Static API (Recommended)</h2>
       <p>Import individual icon components directly. Supports full tree shaking.</p>
       <pre className="not-prose code-block">
-        <code>{`import { Home, CheckCircle } from '@whydrf/nava-icon-react'
+        <code>{`import { HomeIcon, CheckCircleIcon } from '@whydrf/nava-icon-react'
 import type { IconName, IconMode } from '@whydrf/nava-icon-react'
 
-<Home size={24} />
-<CheckCircle mode="filled" color="green" />`}</code>
+<HomeIcon size={24} />
+<CheckCircleIcon mode="filled" color="green" />`}</code>
       </pre>
       <h2>Dynamic API</h2>
       <p>
@@ -29,6 +29,34 @@ import type { IconName, IconMode } from '@whydrf/nava-icon-react'
 <Icon name="home" size={24} />
 <Icon name="check-circle" mode="filled" />`}</code>
       </pre>
+      <h2>Global Configuration</h2>
+      <p>Set default icon props once. All icons inherit these values; component props always override.</p>
+      <pre className="not-prose code-block">
+        <code>{`import { NavaIconProvider } from '@whydrf/nava-icon-react'
+
+<NavaIconProvider size={20} color="gray" strokeWidth={1.5}>
+  <HomeIcon />  {/* inherits all defaults */}
+</NavaIconProvider>`}</code>
+      </pre>
+      <h2>NavaIconConfig</h2>
+      <div className="not-prose overflow-x-auto">
+        <table className="w-full text-[13px] border-collapse">
+          <thead>
+            <tr className="border-b border-surface-200 dark:border-surface-800">
+              <th className="text-left py-2.5 font-semibold">Property</th>
+              <th className="text-left py-2.5 font-semibold">Type</th>
+              <th className="text-left py-2.5 font-semibold">Description</th>
+            </tr>
+          </thead>
+          <tbody className="text-surface-500 dark:text-surface-400">
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">size</td><td className="py-2.5">number | string</td><td className="py-2.5">Default width and height</td></tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">color</td><td className="py-2.5">string</td><td className="py-2.5">Default SVG stroke/fill color</td></tr>
+            <tr className="border-b border-surface-100 dark:border-surface-800/50"><td className="py-2.5 font-mono text-[12px]">strokeWidth</td><td className="py-2.5">number</td><td className="py-2.5">Default stroke width</td></tr>
+            <tr><td className="py-2.5 font-mono text-[12px]">className</td><td className="py-2.5">string</td><td className="py-2.5">Default CSS class name</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p className="text-[13px] text-surface-400 mt-2">Shared type from <code>@whydrf/nava-icon-core</code>.</p>
       <h2>IconMode</h2>
       <div className="not-prose overflow-x-auto">
         <table className="w-full text-[13px] border-collapse">
@@ -56,7 +84,7 @@ import type { IconName, IconMode } from '@whydrf/nava-icon-react'
           <thead>
             <tr className="border-b border-surface-200 dark:border-surface-800">
               <th className="text-left py-2.5 font-semibold">Package</th>
-              <th className="text-left py-2.5 font-semibold">Import</th>
+              <th className="text-left py-2.5 font-semibold">Key Exports</th>
             </tr>
           </thead>
           <tbody className="text-surface-500 dark:text-surface-400">

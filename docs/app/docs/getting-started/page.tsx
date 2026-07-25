@@ -14,6 +14,7 @@ export default function GettingStarted() {
         <li><strong>SVG Source of Truth</strong> — Icons generated from SVG files</li>
         <li><strong>Framework Agnostic</strong> — React, Vue, Angular, Web Components</li>
         <li><strong>Tree Shaking</strong> — Import only what you use</li>
+        <li><strong>Global Configuration</strong> — Set default icon props once, inherit everywhere</li>
         <li><strong>Dual API</strong> — Static imports and dynamic runtime API</li>
         <li><strong>TypeScript</strong> — Full type safety with autocomplete</li>
         <li><strong>ESM + CJS</strong> — Works everywhere</li>
