@@ -35,10 +35,11 @@ import type { NavaIconConfig } from "@whydrf/nava-icon-core";
       [attr.width]="resolvedSize"
       [attr.height]="resolvedSize"
       [attr.fill]="isStrokeBased ? 'none' : resolvedColor"
-      [attr.stroke]="isStrokeBased ? resolvedColor : 'none'"
-      [attr.stroke-width]="isStrokeBased ? resolvedStrokeWidth : undefined"
+      [attr.stroke]="isStrokeBased ? resolvedColor : (hasStrokeWidth ? resolvedColor : 'none')"
+      [attr.stroke-width]="isStrokeBased ? resolvedStrokeWidth : (hasStrokeWidth ? resolvedStrokeWidth : undefined)"
       [attr.stroke-linecap]="isStrokeBased ? 'round' : undefined"
       [attr.stroke-linejoin]="isStrokeBased ? 'round' : undefined"
+      [style.paint-order]="svgStyle"
     >
       <ng-container [ngSwitch]="resolvedMode">
         <g *ngSwitchCase='"filled"' [innerHTML]="'${filled}'"></g>
@@ -78,6 +79,14 @@ export class ${componentName}Component {
 
   get isStrokeBased(): boolean {
     return this.isFilled ? ${filledStrokeBased} : ${regularStrokeBased};
+  }
+
+  get hasStrokeWidth(): boolean {
+    return (this.strokeWidth ?? this.config.strokeWidth) != null;
+  }
+
+  get svgStyle(): string | null {
+    return this.hasStrokeWidth && !this.isStrokeBased ? "stroke fill" : null;
   }
 }
 `;

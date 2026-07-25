@@ -50,6 +50,7 @@ class NavaIcon${componentName} extends HTMLElement {
     const isFilled = mode === "filled";
     const paths = isFilled ? \`${filled}\` : \`${regular}\`;
     const strokeBased = isFilled ? ${filledStrokeBased} : ${regularStrokeBased};
+    const hasStrokeWidth = strokeWidth != null;
 
     this.shadowRoot!.innerHTML = \`
       <svg
@@ -58,10 +59,11 @@ class NavaIcon${componentName} extends HTMLElement {
         width="\${size}"
         height="\${size}"
         fill="\${strokeBased ? "none" : color}"
-        stroke="\${strokeBased ? color : "none"}"
-        stroke-width="\${strokeBased ? strokeWidth : ""}"
+        stroke="\${strokeBased ? color : (hasStrokeWidth ? color : "none")}"
+        stroke-width="\${strokeBased ? strokeWidth : (hasStrokeWidth ? strokeWidth : "")}"
         \${strokeBased ? 'stroke-linecap="round"' : ""}
         \${strokeBased ? 'stroke-linejoin="round"' : ""}
+        \${hasStrokeWidth && !strokeBased ? 'style="paint-order: stroke fill"' : ""}
       >
         \${paths}
       </svg>

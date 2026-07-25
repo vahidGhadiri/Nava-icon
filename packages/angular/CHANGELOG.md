@@ -1,5 +1,11 @@
 # @whydrf/nava-icon-angular
 
+## 1.4.2
+
+### Patch Changes
+
+- Fix strokeWidth not working on fill-based icons. When strokeWidth is explicitly set, it now applies as a visible stroke outline using paintOrder: "stroke fill".
+
 ## 1.4.1
 
 ### Patch Changes

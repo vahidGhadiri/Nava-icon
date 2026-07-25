@@ -50,6 +50,10 @@ export const ${componentName} = defineComponent({
       const paths = isFilled ? filledPaths : regularPaths;
       const strokeBased = isFilled ? ${filledStrokeBased} : ${regularStrokeBased};
       const appliedColor = color || "currentColor";
+      const hasStrokeWidth = strokeWidth != null;
+      const svgStyle = hasStrokeWidth && !strokeBased
+        ? { paintOrder: "stroke fill", ...props.style }
+        : props.style;
 
       return h(
         "svg",
@@ -59,12 +63,12 @@ export const ${componentName} = defineComponent({
           width: size,
           height: size,
           fill: strokeBased ? "none" : appliedColor,
-          stroke: strokeBased ? appliedColor : "none",
-          "stroke-width": strokeWidth,
+          stroke: strokeBased ? appliedColor : (hasStrokeWidth ? appliedColor : "none"),
+          "stroke-width": strokeWidth ?? (strokeBased ? 0.5 : undefined),
           "stroke-linecap": strokeBased ? "round" : undefined,
           "stroke-linejoin": strokeBased ? "round" : undefined,
           class: className,
-          style: props.style,
+          style: svgStyle,
           innerHTML: paths,
         },
         [props.title ? h("title", props.title) : null]

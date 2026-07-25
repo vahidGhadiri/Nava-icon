@@ -53,6 +53,10 @@ export function ${componentName}(props: IconProps) {
   const paths = isFilled ? filledPaths : regularPaths;
   const strokeBased = isFilled ? ${filledStrokeBased} : ${regularStrokeBased};
   const appliedColor = color ?? "currentColor";
+  const hasStrokeWidth = strokeWidth != null;
+  const svgStyle = hasStrokeWidth && !strokeBased
+    ? { paintOrder: "stroke fill" as const, ...style }
+    : style;
 
   return (
     <svg
@@ -61,12 +65,12 @@ export function ${componentName}(props: IconProps) {
       width={size}
       height={size}
       fill={strokeBased ? "none" : appliedColor}
-      stroke={strokeBased ? appliedColor : "none"}
+      stroke={strokeBased ? appliedColor : (hasStrokeWidth ? appliedColor : "none")}
       strokeWidth={strokeWidth ?? (strokeBased ? 0.5 : undefined)}
       strokeLinecap={strokeBased ? "round" : undefined}
       strokeLinejoin={strokeBased ? "round" : undefined}
       className={className}
-      style={style}
+      style={svgStyle}
     >
       {title && <title>{title}</title>}
       <g dangerouslySetInnerHTML={{ __html: paths }} />
