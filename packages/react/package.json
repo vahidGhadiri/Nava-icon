@@ -23,6 +23,11 @@
       "import": "./dist/Icon.js",
       "require": "./dist/Icon.cjs"
     },
+    "./NavaIconProvider": {
+      "types": "./dist/NavaIconProvider.d.ts",
+      "import": "./dist/NavaIconProvider.js",
+      "require": "./dist/NavaIconProvider.cjs"
+    },
     "./types": {
       "types": "./dist/types.d.ts",
       "import": "./dist/types.js",
@@ -40,6 +45,9 @@
     "dev": "tsup --config ../../tsup.config.ts --watch",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@whydrf/nava-icon-core": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=18"
