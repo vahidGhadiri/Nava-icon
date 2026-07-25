@@ -1,6 +1,7 @@
-import { defineComponent, h, type Component, type PropType } from "vue";
+import { defineComponent, h, inject, type Component, type PropType } from "vue";
 import * as iconModules from "./icons/index.js";
 import type { IconName } from "./types.js";
+import { NAVA_ICON_CONFIG_KEY } from "./NavaIcon.js";
 
 const iconRecord = iconModules as unknown as Record<string, Component>;
 
@@ -23,37 +24,42 @@ export default defineComponent({
     },
     size: {
       type: [Number, String] as PropType<number | string>,
-      default: 24,
+      default: undefined,
     },
     color: {
       type: String,
-      default: "currentColor",
+      default: undefined,
     },
     strokeWidth: {
       type: [Number, String] as PropType<number | string>,
-      default: 0.5,
+      default: undefined,
     },
     mode: {
       type: String as PropType<"regular" | "filled">,
-      default: "regular",
+      default: undefined,
     },
   },
-  render() {
-    const iconName = normalizeIconName(this.name as string);
-    const Component = iconRecord[iconName];
+  setup(props, { attrs }) {
+    const config = inject(NAVA_ICON_CONFIG_KEY, {});
 
-    if (!Component) {
-      if (typeof console !== "undefined") {
-        console.warn(`[nava-icon] Icon "${this.name}" not found.`);
+    return () => {
+      const iconName = normalizeIconName(props.name as string);
+      const Component = iconRecord[iconName];
+
+      if (!Component) {
+        if (typeof console !== "undefined") {
+          console.warn(`[nava-icon] Icon "${props.name}" not found.`);
+        }
+        return null;
       }
-      return null;
-    }
-    return h(Component, {
-      size: this.size,
-      color: this.color,
-      strokeWidth: this.strokeWidth,
-      mode: this.mode,
-      ...this.$attrs,
-    });
+
+      return h(Component, {
+        size: props.size ?? config.size ?? 24,
+        color: props.color ?? config.color ?? "currentColor",
+        strokeWidth: props.strokeWidth ?? config.strokeWidth ?? 0.5,
+        mode: props.mode ?? "regular",
+        ...attrs,
+      });
+    };
   },
 });
