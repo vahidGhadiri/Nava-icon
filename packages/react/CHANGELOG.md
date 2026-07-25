@@ -1,5 +1,13 @@
 # @whydrf/nava-icon-react
 
+## 1.5.0
+
+### Minor Changes
+
+- 11bd4a5: Lazy-load dynamic Icon component via per-icon import() chunks
+
+  The `<Icon name="...">` dynamic component no longer eagerly imports all 952 icons. Instead, it loads a lightweight loader map (~93KB) and each icon is fetched on demand as its own chunk. Direct imports (`import { HomeIcon }`) continue to work via tree-shaking.
+
 ## 1.4.2
 
 ### Patch Changes
