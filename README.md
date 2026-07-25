@@ -1,8 +1,9 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/whydrf/nava-icon/main/docs/public/favicon.svg" width="80" alt="Nava Icons">
-</p>
-
 <h1 align="center">Nava Icons</h1>
+<p align="center">
+  <a href="https://vahidghadiri.github.io/Nava-icon/">
+    Live Documentation
+  </a>
+</p>
 
 <p align="center">
   A complete, open-source icon library built with SVG as the source of truth.
@@ -26,28 +27,29 @@ This means:
 - **Performance** — Each icon is a standalone, tree-shakeable component. Import one icon, ship only that icon (~300 bytes gzipped).
 - **Flexibility** — Every icon ships in two variants: `regular` (clean stroke outlines) and `filled` (solid shapes). Toggle between them with a single prop.
 - **Type safety** — Full TypeScript support with autocompletion for icon names. No more guessing valid names.
+- **Global configuration** — Set default icon props once (size, color, strokeWidth) and have every icon inherit them. Component props always override.
 - **Zero lock-in** — The raw SVGs live in `assets/icons/`. If you ever leave this library, you still own the source.
 
 ## What's Inside
 
-| | |
-|---|---|
-| **950+ icons** | Comprehensive coverage of common UI patterns: arrows, actions, files, media, communication, and more |
-| **4 frameworks** | React, Vue 3, Angular 17+, and Web Components — all from the same source |
-| **2 variants** | `regular` (stroke-based outlines) and `filled` (solid shapes) for every icon |
-| **Fully typed** | TypeScript definitions for icon names, props, and component APIs |
-| **SSR-ready** | Works with Next.js, Nuxt, Angular Universal, and any server-rendered setup |
+|                  |                                                                                                      |
+| ---------------- | ---------------------------------------------------------------------------------------------------- |
+| **950+ icons**   | Comprehensive coverage of common UI patterns: arrows, actions, files, media, communication, and more |
+| **4 frameworks** | React, Vue 3, Angular 17+, and Web Components — all from the same source                             |
+| **2 variants**   | `regular` (stroke-based outlines) and `filled` (solid shapes) for every icon                         |
+| **Fully typed**  | TypeScript definitions for icon names, props, and component APIs                                     |
+| **SSR-ready**    | Works with Next.js, Nuxt, Angular Universal, and any server-rendered setup                           |
 
 ## Choose Your Framework
 
 Pick the package that matches your stack. Each package provides a native component experience — no wrappers, no adapters.
 
-| Package | Install | Description |
-|---------|---------|-------------|
-| [`@whydrf/nava-icon-react`](./packages/react) | `npm i @whydrf/nava-icon-react` | React components with hooks support, forwardRef, and full TypeScript |
-| [`@whydrf/nava-icon-vue`](./packages/vue) | `npm i @whydrf/nava-icon-vue` | Vue 3 components using Composition API with `<script setup>` support |
-| [`@whydrf/nava-icon-angular`](./angular) | `npm i @whydrf/nava-icon-angular` | Standalone Angular components with OnPush change detection |
-| [`@whydrf/nava-icon-web-components`](./packages/web-components) | `npm i @whydrf/nava-icon-web-components` | Framework-agnostic Custom Elements with Shadow DOM encapsulation |
+| Package                                                         | Install                                  | Description                                                          |
+| --------------------------------------------------------------- | ---------------------------------------- | -------------------------------------------------------------------- |
+| [`@whydrf/nava-icon-react`](./packages/react)                   | `npm i @whydrf/nava-icon-react`          | React components with hooks support, forwardRef, and full TypeScript |
+| [`@whydrf/nava-icon-vue`](./packages/vue)                       | `npm i @whydrf/nava-icon-vue`            | Vue 3 components using Composition API with `<script setup>` support |
+| [`@whydrf/nava-icon-angular`](./angular)                        | `npm i @whydrf/nava-icon-angular`        | Standalone Angular components with OnPush change detection           |
+| [`@whydrf/nava-icon-web-components`](./packages/web-components) | `npm i @whydrf/nava-icon-web-components` | Framework-agnostic Custom Elements with Shadow DOM encapsulation     |
 
 ## Getting Started
 
@@ -100,14 +102,42 @@ Every icon supports a `mode` prop that toggles between the two visual variants:
 
 You can switch modes dynamically based on state (e.g., active navigation items, toggled settings).
 
+### Global Configuration
+
+Set default icon props once and have every icon in your app inherit them. Individual icon props always take priority.
+
+```tsx
+// React
+import { NavaIconProvider, HomeIcon } from "@whydrf/nava-icon-react";
+
+<NavaIconProvider size={20} color="gray" strokeWidth={1.5}>
+  <HomeIcon /> {/* inherits size=20, color="gray", strokeWidth=1.5 */}
+  <HomeIcon size={32} /> {/* size=32 overrides — rest inherited */}
+</NavaIconProvider>;
+```
+
+```ts
+// Vue — app.use() with provide/inject
+import { NavaIcon } from "@whydrf/nava-icon-vue";
+app.use(NavaIcon, { size: 20, color: "gray", strokeWidth: 1.5 });
+```
+
+```ts
+// Angular — DI injection token
+import { NAVA_ICON_CONFIG } from '@whydrf/nava-icon-angular'
+{ provide: NAVA_ICON_CONFIG, useValue: { size: 20, color: 'gray', strokeWidth: 1.5 } }
+```
+
+Each framework's package README has detailed examples. The `@whydrf/nava-icon-core` package provides the shared `NavaIconConfig` type.
+
 ### Dynamic Usage
 
 Sometimes you don't know which icon to render until runtime — for example, when icons come from a database or user configuration. Each package provides a dynamic component for this:
 
 ```tsx
 // React
-import { Icon } from '@whydrf/nava-icon-react'
-<Icon name={userSelectedIcon} size={24} />
+import { Icon } from "@whydrf/nava-icon-react";
+<Icon name={userSelectedIcon} size={24} />;
 ```
 
 The dynamic component accepts icon names as strings (e.g., `"home"`, `"check-circle"`, `"arrow-right"`). The trade-off is that it bundles all icons, so use it only when static imports aren't possible.
@@ -116,13 +146,13 @@ The dynamic component accepts icon names as strings (e.g., `"home"`, `"check-cir
 
 All icon components share a consistent set of props:
 
-| Prop | Type | Default | What it does |
-|------|------|---------|-------------|
-| `size` | `number \| string` | `24` | Sets both width and height in pixels |
-| `color` | `string` | `currentColor` | Sets the SVG stroke or fill color. `currentColor` inherits from your CSS |
-| `strokeWidth` | `number \| string` | `0.5` | Controls the thickness of stroke-based icons |
-| `mode` | `"regular" \| "filled"` | `"regular"` | Toggles between stroke outline and solid fill variants |
-| `title` | `string` | — | Adds an accessible `<title>` element for screen readers |
+| Prop          | Type                    | Default        | What it does                                                             |
+| ------------- | ----------------------- | -------------- | ------------------------------------------------------------------------ |
+| `size`        | `number \| string`      | `24`           | Sets both width and height in pixels                                     |
+| `color`       | `string`                | `currentColor` | Sets the SVG stroke or fill color. `currentColor` inherits from your CSS |
+| `strokeWidth` | `number \| string`      | `0.5`          | Controls the thickness of stroke-based icons                             |
+| `mode`        | `"regular" \| "filled"` | `"regular"`    | Toggles between stroke outline and solid fill variants                   |
+| `title`       | `string`                | —              | Adds an accessible `<title>` element for screen readers                  |
 
 Since these are native components, you can also pass standard HTML/SVG attributes like `className`, `style`, `onClick`, `aria-label`, and so on.
 
@@ -132,7 +162,7 @@ Tree shaking is one of the biggest advantages of static imports. Here's what hap
 
 ```tsx
 // Your bundler (webpack, Vite, Rollup, esbuild) traces imports:
-import { HomeIcon } from '@whydrf/nava-icon-react'
+import { HomeIcon } from "@whydrf/nava-icon-react";
 
 // Only the HomeIcon component code ends up in your bundle (~300B)
 // The other 949 icons are completely eliminated
@@ -142,7 +172,7 @@ import { HomeIcon } from '@whydrf/nava-icon-react'
 
 ```tsx
 // ❌ This imports ALL 950+ icons — defeats tree shaking
-import * as Icons from '@whydrf/nava-icon-react'
+import * as Icons from "@whydrf/nava-icon-react";
 ```
 
 If you need dynamic icon selection, use the `Icon` component instead. It's designed for that use case and documents the trade-off clearly.
@@ -156,10 +186,10 @@ Every package ships with full TypeScript definitions. You get:
 - **Prop types** for all component props
 
 ```tsx
-import type { IconName, IconMode } from '@whydrf/nava-icon-react'
+import type { IconName, IconMode } from "@whydrf/nava-icon-react";
 
-const icon: IconName = 'home'    // ✅ valid
-const bad: IconName = 'invalid'  // ❌ compile error
+const icon: IconName = "home"; // ✅ valid
+const bad: IconName = "invalid"; // ❌ compile error
 ```
 
 ## Server-Side Rendering
@@ -175,13 +205,13 @@ All packages work with SSR out of the box. Icons render as regular HTML/SVG elem
 
 Nava Icons works in all modern browsers:
 
-| Browser | Version |
-|---------|---------|
-| Chrome | 67+ |
-| Firefox | 63+ |
-| Safari | 10.1+ |
-| Edge | 79+ |
-| IE 11 | Not supported |
+| Browser | Version       |
+| ------- | ------------- |
+| Chrome  | 67+           |
+| Firefox | 63+           |
+| Safari  | 10.1+         |
+| Edge    | 79+           |
+| IE 11   | Not supported |
 
 ## Icon Gallery
 
@@ -189,16 +219,16 @@ Browse all 950+ icons with live preview and copy-paste code snippets at [**nava-
 
 ### Popular Icons
 
-| Category | Icons |
-|----------|-------|
-| **Arrows** | `arrow-back`, `arrow-right`, `arrow-from-left`, `arrow-to-top`, `refresh`, `redo`, `undo` |
-| **Interface** | `home`, `search`, `settings`, `menu`, `check-circle`, `x-circle`, `copy`, `trash` |
-| **Communication** | `bell`, `mail`, `phone`, `message-square`, `send`, `at` |
-| **Files** | `file`, `folder`, `download`, `upload`, `archive`, `clipboard` |
-| **Media** | `camera`, `image`, `music`, `video`, `play`, `pause` |
-| **Objects** | `star`, `bookmark`, `lock`, `key`, `award`, `gift` |
-| **Weather** | `sun`, `moon`, `cloud`, `droplet`, `wind`, `umbrella` |
-| **Shopping** | `cart`, `credit-card`, `bag`, `tag`, `badge`, `diamond` |
+| Category          | Icons                                                                                     |
+| ----------------- | ----------------------------------------------------------------------------------------- |
+| **Arrows**        | `arrow-back`, `arrow-right`, `arrow-from-left`, `arrow-to-top`, `refresh`, `redo`, `undo` |
+| **Interface**     | `home`, `search`, `settings`, `menu`, `check-circle`, `x-circle`, `copy`, `trash`         |
+| **Communication** | `bell`, `mail`, `phone`, `message-square`, `send`, `at`                                   |
+| **Files**         | `file`, `folder`, `download`, `upload`, `archive`, `clipboard`                            |
+| **Media**         | `camera`, `image`, `music`, `video`, `play`, `pause`                                      |
+| **Objects**       | `star`, `bookmark`, `lock`, `key`, `award`, `gift`                                        |
+| **Weather**       | `sun`, `moon`, `cloud`, `droplet`, `wind`, `umbrella`                                     |
+| **Shopping**      | `cart`, `credit-card`, `bag`, `tag`, `badge`, `diamond`                                   |
 
 ## Contributing
 

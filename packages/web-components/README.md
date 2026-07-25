@@ -1,8 +1,10 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/whydrf/nava-icon/main/docs/public/favicon.svg" width="60" alt="Nava Icons">
-</p>
 
 <h1 align="center">@whydrf/nava-icon-web-components</h1>
+<p align="center">
+  <a href="https://vahidghadiri.github.io/Nava-icon/">
+    Live Documentation
+  </a>
+</p>
 
 <p align="center">
   950+ beautiful, tree-shakeable SVG icons as native Web Components.
@@ -51,6 +53,33 @@ Once imported, every icon becomes available as a custom element. Icons follow th
 ```
 
 That's it — no framework, no components to import, no configuration. Just HTML.
+
+## Global Configuration
+
+You can set default icon properties globally using `setNavaIconConfig`. All icons will use these defaults unless overridden by individual attributes.
+
+```html
+<script type="module">
+  import '@whydrf/nava-icon-web-components'
+  import { setNavaIconConfig } from '@whydrf/nava-icon-web-components'
+
+  // Set global defaults
+  setNavaIconConfig({ size: 20, color: 'gray', strokeWidth: 1.5 })
+</script>
+
+<!-- All icons inherit global defaults -->
+<nava-icon-home></nava-icon-home>              <!-- size=20, color="gray" -->
+<nava-icon-search size="24"></nava-icon-search> <!-- size=24 overrides — rest inherited -->
+```
+
+**Attributes always override global configuration.** If you pass `size="32"` on an element, that takes priority over the global `size`.
+
+You can read the current configuration at any time:
+
+```js
+import { getNavaIconConfig } from '@whydrf/nava-icon-web-components'
+console.log(getNavaIconConfig()) // { size: 20, color: 'gray', strokeWidth: 1.5 }
+```
 
 ## How Tree Shaking Works
 

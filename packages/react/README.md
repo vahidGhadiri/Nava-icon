@@ -1,8 +1,10 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/whydrf/nava-icon/main/docs/public/favicon.svg" width="60" alt="Nava Icons">
-</p>
 
 <h1 align="center">@whydrf/nava-icon-react</h1>
+<p align="center">
+  <a href="https://vahidghadiri.github.io/Nava-icon/">
+    Live Documentation
+  </a>
+</p>
 
 <p align="center">
   950+ beautiful, tree-shakeable SVG icons for React applications.
@@ -48,7 +50,7 @@ export function Navigation() {
 }
 ```
 
-That's it — no provider, no context, no configuration. Just import and use.
+That's it — no setup required. Just import and use. For setting default props across your app, see [Global Configuration](#global-configuration).
 
 ## How Tree Shaking Works
 
@@ -155,6 +157,36 @@ With **Tailwind CSS**, wrap the icon in a utility class and use `currentColor`:
 
 // Dark mode support
 <HomeIcon className="text-gray-900 dark:text-white" />
+```
+
+## Global Configuration
+
+Instead of passing the same props to every icon, wrap your app with `NavaIconProvider` to set defaults once. All `Icon` components and static icon imports within the provider will inherit these values.
+
+```tsx
+import { NavaIconProvider, HomeIcon, SearchIcon } from '@whydrf/nava-icon-react'
+
+function App() {
+  return (
+    <NavaIconProvider size={20} color="gray" strokeWidth={1.5}>
+      <HomeIcon />              {/* size=20, color="gray", strokeWidth=1.5 */}
+      <SearchIcon size={24} />  {/* size=24 overrides provider — color and strokeWidth inherited */}
+    </NavaIconProvider>
+  )
+}
+```
+
+**Props always override provider values.** If you pass `size={32}` to an icon, that takes priority over the provider's `size`.
+
+You can also use the `useNavaIconConfig` hook to read the current configuration:
+
+```tsx
+import { useNavaIconConfig } from '@whydrf/nava-icon-react'
+
+function DebugConfig() {
+  const config = useNavaIconConfig()
+  return <pre>{JSON.stringify(config)}</pre>
+}
 ```
 
 ## Accessibility
