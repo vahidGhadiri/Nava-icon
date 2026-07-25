@@ -1,5 +1,4 @@
 ---
-"@whydrf/nava-icon-core": minor
 "@whydrf/nava-icon-react": minor
 "@whydrf/nava-icon-vue": minor
 "@whydrf/nava-icon-angular": minor
