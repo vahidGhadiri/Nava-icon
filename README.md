@@ -1,6 +1,6 @@
 <h1 align="center">Nava Icons</h1>
 <p align="center">
-  <a href="https://vahidghadiri.github.io/Nava-icon/">
+  <a href="https://nava-platform.github.io/Nava-icon/">
     Live Documentation
   </a>
 </p>
